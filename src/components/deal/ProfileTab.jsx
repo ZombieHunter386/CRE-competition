@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { fetchParcelByPin } from '../../services/county'
 import { getStreetViewUrl } from '../../services/streetview'
+import { generateConceptRender } from '../../services/dalle'
 
 export default function ProfileTab({ deal, onUpdate }) {
   const [pin, setPin] = useState(deal.propertyFacts?.pin || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [renderLoading, setRenderLoading] = useState(false)
 
   async function handlePinLookup() {
     if (!pin) return
@@ -66,6 +68,27 @@ export default function ProfileTab({ deal, onUpdate }) {
             <div className="text-center text-purple-400 text-xs py-1">AI Concept Render</div>
           </div>
         </div>
+
+        <button
+          onClick={async () => {
+            setRenderLoading(true)
+            try {
+              const result = await generateConceptRender({
+                dealType: deal.dealType || 'mixed_use',
+                description: deal.description,
+                propertyFacts: deal.propertyFacts,
+                municipality: deal.address,
+              })
+              onUpdate({ conceptRenderUrl: result.url, zoningContext: result.zoningContext })
+            } finally {
+              setRenderLoading(false)
+            }
+          }}
+          disabled={renderLoading}
+          className="bg-purple-800 border border-purple-500 text-purple-200 text-sm px-3 py-1.5 rounded mt-2 w-full disabled:opacity-50"
+        >
+          {renderLoading ? '🤖 Generating render...' : '🤖 Generate AI Concept Render'}
+        </button>
 
         {/* Description */}
         <div className="bg-[#161b22] border border-gray-700 rounded-lg p-3">
