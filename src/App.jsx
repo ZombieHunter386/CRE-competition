@@ -4,7 +4,6 @@ import MapPage from './pages/MapPage'
 import DealPage from './pages/DealPage'
 import PipelinePage from './pages/PipelinePage'
 import SettingsPage from './pages/SettingsPage'
-import './styles/index.css'
 
 export default function App() {
   return (
