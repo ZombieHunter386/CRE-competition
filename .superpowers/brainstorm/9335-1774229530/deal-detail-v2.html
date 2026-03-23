@@ -1,0 +1,130 @@
+<h2>Deal Detail — Profile Tab (v2)</h2>
+<p class="subtitle">FAR removed · AI render informed by zoning standards</p>
+
+<div style="border:1px solid #333;border-radius:8px;overflow:hidden;margin-top:16px;font-size:0.82em;">
+
+  <!-- Top bar -->
+  <div style="background:#161b22;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="color:#4a9eff;cursor:pointer;">← Map</span>
+      <span style="color:#555;">|</span>
+      <strong style="color:#fff;">123 Main St, Chicago IL 60601</strong>
+      <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:2px 8px;color:#4caf50;">Mixed-Use</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:4px 10px;">💾 Save Deal</button>
+      <button style="background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:4px 10px;">📤 Export</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#0d1117;display:flex;border-bottom:1px solid #333;">
+    <div style="padding:8px 18px;border-bottom:2px solid #4a9eff;color:#4a9eff;">📍 Profile</div>
+    <div style="padding:8px 18px;color:#aaa;">👥 Contacts</div>
+    <div style="padding:8px 18px;color:#aaa;">📊 BOE Model</div>
+  </div>
+
+  <!-- Profile content -->
+  <div style="background:#0d1117;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+    <!-- Left column -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <!-- Street view + concept render -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:#161b22;border:1px solid #333;border-radius:6px;overflow:hidden;">
+          <div style="background:#1a2a1a;height:90px;display:flex;align-items:center;justify-content:center;color:#4caf50;opacity:0.4;font-size:1.8em;">🏙️</div>
+          <div style="padding:4px 8px;text-align:center;color:#aaa;font-size:0.88em;">Street View</div>
+        </div>
+        <div style="background:#161b22;border:1px solid #9b59ff;border-radius:6px;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#1a0d2e,#0d1a2e);height:90px;display:flex;align-items:center;justify-content:center;font-size:1.8em;opacity:0.6;">🏗️</div>
+          <div style="padding:4px 8px;color:#9b59ff;font-size:0.82em;text-align:center;">AI Concept Render</div>
+        </div>
+      </div>
+
+      <!-- Zoning context used for render -->
+      <div style="background:#150d1f;border:1px solid #9b59ff;border-radius:6px;padding:10px;">
+        <div style="color:#9b59ff;font-weight:bold;margin-bottom:6px;font-size:0.9em;">🤖 Render Context <span style="font-weight:normal;color:#aaa;font-size:0.88em;">— what Claude tells DALL-E</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+          <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+            <div style="color:#666;font-size:0.8em;">Zoning</div>
+            <div style="color:#fff;">B3-3 (Mixed-Use)</div>
+          </div>
+          <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+            <div style="color:#666;font-size:0.8em;">Max Height</div>
+            <div style="color:#fff;">~5 stories / 65 ft</div>
+          </div>
+          <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+            <div style="color:#666;font-size:0.8em;">Setback</div>
+            <div style="color:#fff;">0 ft front, 2 ft rear</div>
+          </div>
+          <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+            <div style="color:#666;font-size:0.8em;">Ground Floor Use</div>
+            <div style="color:#fff;">Commercial required</div>
+          </div>
+        </div>
+        <div style="color:#777;font-size:0.82em;font-style:italic;">Claude infers zoning standards from district code + municipality, then constrains DALL-E prompt to realistic massing, height, and use.</div>
+      </div>
+
+      <!-- Deal description -->
+      <div style="background:#161b22;border:1px solid #333;border-radius:6px;padding:10px;">
+        <div style="color:#aaa;font-size:0.88em;margin-bottom:6px;">📝 Deal Description</div>
+        <div style="color:#ccc;line-height:1.6;">5-story mixed-use. Ground floor retail (~3,000 sf), floors 2–5 residential (16 units). Corner lot, transit-adjacent. Proposed 2026 start.</div>
+      </div>
+    </div>
+
+    <!-- Right column: County data (FAR removed) -->
+    <div style="background:#161b22;border:1px solid #333;border-radius:6px;padding:12px;">
+      <div style="color:#4a9eff;margin-bottom:10px;font-weight:bold;">📋 Property Facts <span style="color:#4caf50;font-size:0.85em;font-weight:normal;">✓ Auto-filled from PIN</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">PIN</div>
+          <div style="color:#fff;">14-21-301-015</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Lot Size</div>
+          <div style="color:#fff;">6,250 sf</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Zoning</div>
+          <div style="color:#fff;">B3-3</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Current Use</div>
+          <div style="color:#fff;">Vacant Land</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Assessed Value</div>
+          <div style="color:#fff;">$312,000</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Tax Year</div>
+          <div style="color:#fff;">2024</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Owner Name</div>
+          <div style="color:#fff;">J. Smith LLC</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Owner Address</div>
+          <div style="color:#fff;">456 Oak Ave, Chicago</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Annual Taxes</div>
+          <div style="color:#fff;">$8,400</div>
+        </div>
+        <div style="background:#0d1117;border-radius:4px;padding:6px 8px;">
+          <div style="color:#666;font-size:0.82em;">Year Built</div>
+          <div style="color:#fff;">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:#161b22;border-top:1px solid #333;padding:10px 14px;display:flex;gap:16px;">
+    <div style="color:#555;font-size:0.85em;">👥 <span style="color:#9b59ff;">Next:</span> Contacts tab mockup</div>
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#aaa;font-size:0.9em;">Profile tab locked? If so, I'll show the Contacts tab next.</p>

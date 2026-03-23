@@ -1,0 +1,166 @@
+<h2>Deal Detail — BOE Model Tab</h2>
+<p class="subtitle">Mode A: know the price → get returns · Mode B: target returns → get max price</p>
+
+<div style="border:1px solid #333;border-radius:8px;overflow:hidden;margin-top:16px;font-size:0.82em;">
+
+  <!-- Top bar -->
+  <div style="background:#161b22;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="color:#4a9eff;">← Map</span>
+      <span style="color:#555;">|</span>
+      <strong>123 Main St, Chicago IL 60601</strong>
+      <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:2px 8px;color:#4caf50;">Mixed-Use</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:4px 10px;">💾 Save Deal</button>
+      <button style="background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:4px 10px;">📤 Export</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#0d1117;display:flex;border-bottom:1px solid #333;">
+    <div style="padding:8px 18px;color:#aaa;">📍 Profile</div>
+    <div style="padding:8px 18px;color:#aaa;">👥 Contacts</div>
+    <div style="padding:8px 18px;border-bottom:2px solid #f0a500;color:#f0a500;">📊 BOE Model</div>
+  </div>
+
+  <div style="background:#0d1117;padding:14px;">
+
+    <!-- Mode toggle + deal type -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:#aaa;">Deal Type:</span>
+        <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:3px 10px;color:#4caf50;">🏗️ Mixed-Use</span>
+        <span style="color:#555;font-size:0.85em;">— auto-detected by Claude</span>
+      </div>
+      <!-- Mode toggle -->
+      <div style="display:flex;background:#161b22;border:1px solid #333;border-radius:6px;overflow:hidden;">
+        <div style="padding:6px 14px;background:#f0a500;color:#000;font-weight:bold;cursor:pointer;">Mode A — Know the Price</div>
+        <div style="padding:6px 14px;color:#555;cursor:pointer;">Mode B — Solve for Price</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+      <!-- LEFT: Inputs -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+
+        <!-- AI Assumptions -->
+        <div style="background:#150d1f;border:1px solid #9b59ff;border-radius:6px;padding:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="color:#9b59ff;font-weight:bold;">🤖 AI-Filled Assumptions</span>
+            <button style="background:transparent;border:1px solid #9b59ff;border-radius:4px;color:#9b59ff;padding:2px 8px;font-size:0.82em;">↻ Regenerate</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Market Rent — Residential</div>
+              <div style="color:#fff;">$2,400/unit/mo <span style="color:#4caf50;font-size:0.8em;">↑ HUD FMR</span></div>
+            </div>
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Market Rent — Retail</div>
+              <div style="color:#fff;">$28/sf/yr <span style="color:#4caf50;font-size:0.8em;">↑ Census</span></div>
+            </div>
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Hard Cost / sf</div>
+              <div style="color:#fff;">$220/sf <span style="color:#aaa;font-size:0.8em;">↑ RSMeans est.</span></div>
+            </div>
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Vacancy Rate</div>
+              <div style="color:#fff;">6% <span style="color:#aaa;font-size:0.8em;">↑ market avg</span></div>
+            </div>
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Exit Cap Rate</div>
+              <div style="color:#fff;">5.75%</div>
+            </div>
+            <div style="background:#0d1117;border-radius:4px;padding:5px 8px;">
+              <div style="color:#555;font-size:0.78em;">Soft Costs</div>
+              <div style="color:#fff;">15% of hard</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User inputs -->
+        <div style="background:#161b22;border:1px solid #333;border-radius:6px;padding:10px;">
+          <div style="color:#aaa;font-weight:bold;margin-bottom:8px;">✏️ Your Inputs <span style="color:#555;font-weight:normal;font-size:0.88em;">— override any assumption</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">Asking Price</div>
+              <div style="background:#0d1117;border:1px solid #4a9eff;border-radius:4px;padding:5px 8px;color:#fff;">$1,200,000</div>
+            </div>
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">GFA (sf)</div>
+              <div style="background:#0d1117;border:1px solid #333;border-radius:4px;padding:5px 8px;color:#fff;">18,750</div>
+            </div>
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">Residential Units</div>
+              <div style="background:#0d1117;border:1px solid #333;border-radius:4px;padding:5px 8px;color:#fff;">16</div>
+            </div>
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">Retail SF</div>
+              <div style="background:#0d1117;border:1px solid #333;border-radius:4px;padding:5px 8px;color:#fff;">3,000</div>
+            </div>
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">Hold Period (yrs)</div>
+              <div style="background:#0d1117;border:1px solid #333;border-radius:4px;padding:5px 8px;color:#fff;">5</div>
+            </div>
+            <div>
+              <div style="color:#555;font-size:0.8em;margin-bottom:3px;">Equity % (LTV)</div>
+              <div style="background:#0d1117;border:1px solid #333;border-radius:4px;padding:5px 8px;color:#fff;">30%</div>
+            </div>
+          </div>
+          <button style="margin-top:10px;width:100%;background:#9b59ff;border:none;border-radius:4px;color:#fff;padding:7px;font-weight:bold;cursor:pointer;">🤖 Run Model</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Outputs -->
+      <div style="background:#161b22;border:1px solid #4caf50;border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+        <div style="color:#4caf50;font-weight:bold;margin-bottom:4px;">📈 Model Output</div>
+
+        <!-- Key returns -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#0d1a0d;border:1px solid #4caf50;border-radius:6px;padding:10px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Levered IRR</div>
+            <div style="font-size:1.6em;font-weight:bold;color:#4caf50;">14.2%</div>
+          </div>
+          <div style="background:#0d1a0d;border:1px solid #4caf50;border-radius:6px;padding:10px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Equity Multiple</div>
+            <div style="font-size:1.6em;font-weight:bold;color:#4caf50;">1.92×</div>
+          </div>
+          <div style="background:#0d1117;border:1px solid #333;border-radius:6px;padding:8px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Cash-on-Cash Yr 1</div>
+            <div style="font-size:1.3em;font-weight:bold;color:#fff;">5.8%</div>
+          </div>
+          <div style="background:#0d1117;border:1px solid #333;border-radius:6px;padding:8px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Stabilized NOI</div>
+            <div style="font-size:1.3em;font-weight:bold;color:#fff;">$138,400</div>
+          </div>
+          <div style="background:#0d1117;border:1px solid #333;border-radius:6px;padding:8px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Total Dev Cost</div>
+            <div style="font-size:1.3em;font-weight:bold;color:#fff;">$5.3M</div>
+          </div>
+          <div style="background:#0d1117;border:1px solid #333;border-radius:6px;padding:8px;text-align:center;">
+            <div style="color:#555;font-size:0.8em;">Cost / Unit</div>
+            <div style="font-size:1.3em;font-weight:bold;color:#fff;">$312K</div>
+          </div>
+        </div>
+
+        <!-- Feasibility signal -->
+        <div style="background:#0d1a0d;border:1px solid #4caf50;border-radius:6px;padding:8px;display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <span style="font-size:1.3em;">✅</span>
+          <div>
+            <strong style="color:#4caf50;">Pencils at target returns</strong>
+            <div style="color:#777;font-size:0.82em;margin-top:2px;">IRR exceeds 12% hurdle · Equity multiple above 1.75×</div>
+          </div>
+        </div>
+
+        <!-- Export row -->
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <button style="flex:1;background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:6px;font-size:0.85em;">📊 Export to Excel</button>
+          <button style="flex:1;background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:6px;font-size:0.85em;">📄 Export PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#aaa;font-size:0.9em;">Does the BOE tab look right? Any fields to add, remove, or change before we wrap up the design?</p>

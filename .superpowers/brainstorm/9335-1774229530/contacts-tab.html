@@ -1,0 +1,134 @@
+<h2>Deal Detail — Contacts Tab</h2>
+<p class="subtitle">CRM layer — multiple roles per deal, owner auto-filled from tax data</p>
+
+<div style="border:1px solid #333;border-radius:8px;overflow:hidden;margin-top:16px;font-size:0.82em;">
+
+  <!-- Top bar -->
+  <div style="background:#161b22;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="color:#4a9eff;">← Map</span>
+      <span style="color:#555;">|</span>
+      <strong style="color:#fff;">123 Main St, Chicago IL 60601</strong>
+      <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:2px 8px;color:#4caf50;">Mixed-Use</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:4px 10px;">💾 Save Deal</button>
+      <button style="background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:4px 10px;">📤 Export</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#0d1117;display:flex;border-bottom:1px solid #333;">
+    <div style="padding:8px 18px;color:#aaa;">📍 Profile</div>
+    <div style="padding:8px 18px;border-bottom:2px solid #9b59ff;color:#9b59ff;">👥 Contacts</div>
+    <div style="padding:8px 18px;color:#aaa;">📊 BOE Model</div>
+  </div>
+
+  <!-- Contacts content -->
+  <div style="background:#0d1117;padding:14px;">
+
+    <!-- Contact cards -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+
+      <!-- Owner card — auto-filled -->
+      <div style="background:#161b22;border:1px solid #9b59ff;border-radius:8px;padding:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#9b59ff22;border:1px solid #9b59ff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0;">🏠</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <strong style="color:#fff;">J. Smith LLC</strong>
+                <span style="background:#9b59ff22;border:1px solid #9b59ff;border-radius:4px;padding:1px 7px;color:#9b59ff;font-size:0.85em;">Owner / Seller</span>
+                <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:1px 7px;color:#4caf50;font-size:0.8em;">✓ Auto-filled</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;">
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Mailing Address</div>
+                  <div style="color:#ccc;">456 Oak Ave, Chicago IL 60614</div>
+                </div>
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Phone</div>
+                  <div style="color:#555;font-style:italic;">Not on file</div>
+                </div>
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Email</div>
+                  <div style="color:#555;font-style:italic;">Not on file</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:3px 8px;font-size:0.85em;">✏️ Edit</button>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #333;">
+          <div style="color:#555;font-size:0.8em;">Notes</div>
+          <div style="color:#777;font-style:italic;">Add notes about owner...</div>
+        </div>
+      </div>
+
+      <!-- Listing Broker card — manually added -->
+      <div style="background:#161b22;border:1px solid #333;border-radius:8px;padding:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0;">🤝</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <strong style="color:#fff;">Mike Torres</strong>
+                <span style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;padding:1px 7px;color:#4a9eff;font-size:0.85em;">Listing Broker</span>
+                <span style="color:#aaa;font-size:0.82em;">CBRE Chicago</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;">
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Phone</div>
+                  <div style="color:#ccc;">(312) 555-0192</div>
+                </div>
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Email</div>
+                  <div style="color:#4a9eff;">m.torres@cbre.com</div>
+                </div>
+                <div>
+                  <div style="color:#555;font-size:0.8em;">Last Contacted</div>
+                  <div style="color:#ccc;">Mar 18, 2026</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button style="background:#4caf5022;border:1px solid #4caf50;border-radius:4px;color:#4caf50;padding:3px 8px;font-size:0.85em;">📧 Draft Email</button>
+            <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:3px 8px;font-size:0.85em;">✏️ Edit</button>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #333;">
+          <div style="color:#555;font-size:0.8em;">Notes</div>
+          <div style="color:#ccc;">Met at AI.Edge event. Said owner is motivated, hasn't listed yet. Follow up end of March.</div>
+        </div>
+      </div>
+
+      <!-- Add contact button -->
+      <div style="border:1px dashed #333;border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;">
+        <span style="color:#555;font-size:1.2em;">+</span>
+        <span style="color:#555;">Add Contact</span>
+        <div style="display:flex;gap:6px;margin-left:8px;">
+          <span style="background:#161b22;border:1px solid #333;border-radius:4px;padding:2px 8px;color:#777;font-size:0.82em;">🤝 Broker</span>
+          <span style="background:#161b22;border:1px solid #333;border-radius:4px;padding:2px 8px;color:#777;font-size:0.82em;">⚖️ Attorney</span>
+          <span style="background:#161b22;border:1px solid #333;border-radius:4px;padding:2px 8px;color:#777;font-size:0.82em;">🏗️ Contractor</span>
+          <span style="background:#161b22;border:1px solid #333;border-radius:4px;padding:2px 8px;color:#777;font-size:0.82em;">+ Custom</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI draft email hint -->
+    <div style="margin-top:12px;background:#0d1a0d;border:1px solid #4caf50;border-radius:6px;padding:10px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.2em;">📧</span>
+      <div>
+        <strong style="color:#4caf50;">Draft Email with Claude</strong>
+        <div style="color:#777;font-size:0.85em;margin-top:2px;">Click "Draft Email" on any contact — Claude uses their role, deal details, and your notes to write a tailored outreach.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#aaa;font-size:0.9em;">Does the Contacts tab feel right? Any fields to add or change? If good, I'll move to the BOE Model tab next.</p>

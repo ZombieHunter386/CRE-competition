@@ -1,0 +1,114 @@
+<h2>SiteStack — Architecture v3</h2>
+<p class="subtitle">BOE only · Solve for price mode · Saved deals + exports + pipeline</p>
+
+<div class="section">
+  <span class="label">Core User Flow</span>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;">
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">🗺️</div>
+      <strong>Map View</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Discover &amp; pin</div>
+    </div>
+    <div style="font-size:1.4em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">📍</div>
+      <strong>Property Profile</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">PIN → auto-fill</div>
+    </div>
+    <div style="font-size:1.4em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">🤖</div>
+      <strong>AI Model Builder</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Claude fills BOE</div>
+    </div>
+    <div style="font-size:1.4em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #f0a500;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">📊</div>
+      <strong>BOE Model</strong>
+      <div style="font-size:0.75em;color:#f0a500;margin-top:4px;">Price or Returns mode</div>
+    </div>
+    <div style="font-size:1.4em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">💾</div>
+      <strong>Save Deal</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Property + model</div>
+    </div>
+    <div style="font-size:1.4em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 16px;text-align:center;min-width:105px;">
+      <div style="font-size:1.3em;margin-bottom:4px;">📧</div>
+      <strong>Broker Email</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">AI-drafted</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <span class="label" style="color:#f0a500;">📊 BOE Model — Two Modes</span>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+    <div style="background:#1a1500;border:1px solid #f0a500;border-radius:8px;padding:14px;">
+      <strong>Mode A — Know the Price</strong>
+      <p style="font-size:0.87em;color:#ccc;margin-top:6px;">Input asking price + deal characteristics → Claude fills assumptions → outputs IRR, equity multiple, cash-on-cash, NOI, cost per unit</p>
+    </div>
+    <div style="background:#1a1500;border:1px solid #f0a500;border-radius:8px;padding:14px;">
+      <strong>Mode B — Solve for Price</strong>
+      <p style="font-size:0.87em;color:#ccc;margin-top:6px;">Input target return metrics (e.g. 15% IRR, 1.8x equity) → Claude back-solves → outputs max purchase price you can pay to hit those returns</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px;">
+  <div style="background:#0d1117;border:1px solid #4a9eff;border-radius:8px;padding:14px;">
+    <span class="label" style="color:#4a9eff;">💾 Saved Deals</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+      <li>Property + BOE model saved together</li>
+      <li>Reopen &amp; edit any saved deal</li>
+      <li>Saved pins shown on map</li>
+      <li>Stored in localStorage</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #f0a500;border-radius:8px;padding:14px;">
+    <span class="label" style="color:#f0a500;">📤 Export Options</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+      <li>Export BOE model → Excel (.xlsx)</li>
+      <li>Export deal summary → PDF</li>
+      <li>Export concept render image</li>
+      <li>Share link (URL-encoded)</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #4caf50;border-radius:8px;padding:14px;">
+    <span class="label" style="color:#4caf50;">📋 Pipeline Summary</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+      <li>All saved deals in one table</li>
+      <li>Key facts + model outputs per deal</li>
+      <li>IRR, equity mult, NOI, cost/unit</li>
+      <li>Export pipeline → Excel or PDF</li>
+    </ul>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:14px;">
+    <span class="label">🤖 AI Capabilities</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+      <li>Deal type detection → model selection</li>
+      <li>Smart assumption filling (public data)</li>
+      <li>Forward solve: price → returns</li>
+      <li>Back solve: returns → max price</li>
+      <li>Concept rendering (DALL-E 3)</li>
+      <li>Broker email drafting</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:14px;">
+    <span class="label">🌐 Public Data + Tech Stack</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+      <li>County Assessor API (configurable)</li>
+      <li>Mapbox GL JS · Google Street View</li>
+      <li>Census / HUD (rents, demographics)</li>
+      <li>Claude API · DALL-E 3</li>
+      <li>SheetJS (Excel) · jsPDF (PDF)</li>
+      <li>React + Vite · localStorage</li>
+    </ul>
+  </div>
+</div>
+
+<p style="margin-top:20px;color:#aaa;font-size:0.9em;">Architecture locked? If this looks good, we'll move to the UI layout mockup next.</p>

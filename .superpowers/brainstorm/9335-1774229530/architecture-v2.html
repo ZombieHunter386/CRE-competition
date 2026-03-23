@@ -1,0 +1,114 @@
+<h2>SiteStack — Updated Architecture</h2>
+<p class="subtitle">With saved properties, model persistence, exports, and summary sheet</p>
+
+<div class="section">
+  <span class="label">Core User Flow</span>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;">
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">🗺️</div>
+      <strong>Map View</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Discover &amp; pin properties</div>
+    </div>
+    <div style="font-size:1.5em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">📍</div>
+      <strong>Property Profile</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">PIN → county auto-fill</div>
+    </div>
+    <div style="font-size:1.5em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">🤖</div>
+      <strong>AI Model Builder</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Claude selects &amp; fills</div>
+    </div>
+    <div style="font-size:1.5em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">📊</div>
+      <strong>Underwriting</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">BOE ↔ Detailed toggle</div>
+    </div>
+    <div style="font-size:1.5em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">💾</div>
+      <strong>Save Deal</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">Property + model saved</div>
+    </div>
+    <div style="font-size:1.5em;color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:12px 18px;text-align:center;min-width:110px;">
+      <div style="font-size:1.4em;margin-bottom:4px;">📧</div>
+      <strong>Broker Outreach</strong>
+      <div style="font-size:0.75em;color:#aaa;margin-top:4px;">AI-drafted email</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:24px;">
+
+  <div style="background:#0d1117;border:1px solid #4a9eff;border-radius:8px;padding:16px;">
+    <span class="label" style="color:#4a9eff;">💾 Saved Deals</span>
+    <ul style="margin-top:10px;padding-left:18px;line-height:1.9;font-size:0.88em;">
+      <li>Save property + model together as a "Deal"</li>
+      <li>Reopen and edit any saved deal</li>
+      <li>Pins on map show saved status</li>
+      <li>Stored in localStorage (browser)</li>
+    </ul>
+  </div>
+
+  <div style="background:#0d1117;border:1px solid #f0a500;border-radius:8px;padding:16px;">
+    <span class="label" style="color:#f0a500;">📤 Export Options</span>
+    <ul style="margin-top:10px;padding-left:18px;line-height:1.9;font-size:0.88em;">
+      <li>Export model → Excel (.xlsx)</li>
+      <li>Export model → PDF summary</li>
+      <li>Export concept render image</li>
+      <li>Share link (URL-encoded deal)</li>
+    </ul>
+  </div>
+
+  <div style="background:#0d1117;border:1px solid #4caf50;border-radius:8px;padding:16px;">
+    <span class="label" style="color:#4caf50;">📋 Pipeline Summary Sheet</span>
+    <ul style="margin-top:10px;padding-left:18px;line-height:1.9;font-size:0.88em;">
+      <li>All saved properties in one table</li>
+      <li>Key facts: address, deal type, size, asking price</li>
+      <li>Model outputs: IRR, equity multiple, NOI, cost/unit</li>
+      <li>Export pipeline → Excel or PDF</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="section" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;">
+    <span class="label">🤖 AI Capabilities (Claude API)</span>
+    <ul style="margin-top:10px;padding-left:18px;line-height:1.9;font-size:0.88em;">
+      <li>Smart assumptions from public data</li>
+      <li>Deal type detection → model selection</li>
+      <li>BOE &amp; detailed model generation</li>
+      <li>Concept rendering (DALL-E 3)</li>
+      <li>Broker email drafting</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;">
+    <span class="label">🌐 Public Data (No CoStar)</span>
+    <ul style="margin-top:10px;padding-left:18px;line-height:1.9;font-size:0.88em;">
+      <li>County Assessor API (user-configurable)</li>
+      <li>Mapbox GL JS (map + pins)</li>
+      <li>Census / HUD (rents, demographics)</li>
+      <li>Google Street View (site photo)</li>
+      <li>Open zoning data (where available)</li>
+    </ul>
+  </div>
+</div>
+
+<div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:14px;margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:0.88em;">
+  <span class="label" style="width:100%;display:block;margin-bottom:6px;">⚛️ Tech Stack</span>
+  <span>React + Vite</span>
+  <span>Mapbox GL JS</span>
+  <span>Claude API (sonnet-4-6)</span>
+  <span>DALL-E 3</span>
+  <span>SheetJS (Excel export)</span>
+  <span>jsPDF (PDF export)</span>
+  <span>localStorage</span>
+  <span>County REST APIs</span>
+</div>
+
+<p style="margin-top:20px;color:#aaa;font-size:0.9em;">Does this look complete? Any other features before we move to the UI layout?</p>

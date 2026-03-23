@@ -1,0 +1,209 @@
+<h2>BOE Model Tab — v4</h2>
+<p class="subtitle">Institutional styling · White background · Blue inputs · Black outputs · No grid lines</p>
+
+<div style="border:1px solid #333;border-radius:8px;overflow:hidden;margin-top:16px;font-size:0.82em;">
+
+  <!-- Top bar (dark UI stays dark) -->
+  <div style="background:#161b22;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="color:#4a9eff;">← Map</span><span style="color:#555;">|</span>
+      <strong style="color:#fff;">123 Main St, Chicago IL 60601</strong>
+      <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:2px 8px;color:#4caf50;">Mixed-Use</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:4px 10px;">💾 Save Deal</button>
+      <button style="background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:4px 10px;">📤 Export</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#0d1117;display:flex;border-bottom:1px solid #333;">
+    <div style="padding:8px 18px;color:#aaa;">📍 Profile</div>
+    <div style="padding:8px 18px;color:#aaa;">👥 Contacts</div>
+    <div style="padding:8px 18px;border-bottom:2px solid #f0a500;color:#f0a500;">📊 BOE Model</div>
+  </div>
+
+  <div style="background:#0d1117;padding:14px;">
+
+    <!-- Mode + deal type row -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:#aaa;">Deal Type:</span>
+        <span style="background:#1a2a1a;border:1px solid #4caf50;border-radius:4px;padding:3px 10px;color:#4caf50;">🏗️ Mixed-Use</span>
+        <div style="display:flex;background:#161b22;border:1px solid #333;border-radius:6px;overflow:hidden;margin-left:8px;">
+          <div style="padding:5px 12px;background:#f0a500;color:#000;font-weight:bold;">Mode A — Know the Price</div>
+          <div style="padding:5px 12px;color:#555;">Mode B — Solve for Price</div>
+        </div>
+      </div>
+      <button style="background:#9b59ff22;border:1px solid #9b59ff;border-radius:4px;color:#9b59ff;padding:4px 12px;">↻ Re-run Claude</button>
+    </div>
+
+    <!-- Returns bar -->
+    <div style="background:#161b22;border:1px solid #4caf50;border-radius:6px;padding:10px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="color:#4caf50;font-weight:bold;">📈 Returns</span>
+          <span style="background:#0d1a0d;border:1px solid #4caf5044;border-radius:4px;padding:2px 8px;color:#4caf50;font-size:0.82em;">⟳ Synced with Model</span>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">Levered IRR</div><div style="font-size:1.3em;font-weight:bold;color:#4caf50;">14.2%</div></div>
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">Equity Multiple</div><div style="font-size:1.3em;font-weight:bold;color:#4caf50;">1.92×</div></div>
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">Cash-on-Cash Yr 1</div><div style="font-size:1.3em;font-weight:bold;color:#fff;">5.8%</div></div>
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">NOI</div><div style="font-size:1.3em;font-weight:bold;color:#fff;">$138,400</div></div>
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">Total Dev Cost</div><div style="font-size:1.3em;font-weight:bold;color:#fff;">$5.3M</div></div>
+          <div style="text-align:center;"><div style="color:#555;font-size:0.78em;">Cost / Unit</div><div style="font-size:1.3em;font-weight:bold;color:#fff;">$312K</div></div>
+          <div style="display:flex;align-items:center;padding-left:10px;border-left:1px solid #333;gap:6px;">
+            <span>✅</span><span style="color:#4caf50;font-weight:bold;">Pencils</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button style="background:#f0a50022;border:1px solid #f0a500;border-radius:4px;color:#f0a500;padding:4px 10px;font-size:0.82em;">📊 .xlsx</button>
+          <button style="background:#4a9eff22;border:1px solid #4a9eff;border-radius:4px;color:#4a9eff;padding:4px 10px;font-size:0.82em;">📄 PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE MODEL — white background, institutional -->
+    <div style="border:1px solid #ccc;border-radius:8px;overflow:hidden;background:#fff;">
+
+      <!-- Model header bar -->
+      <div style="background:#f5f5f5;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="color:#111;font-weight:bold;font-size:1em;">Model</span>
+          <span style="color:#888;font-size:0.82em;">⟳ Two-way sync · edit here or in inputs above</span>
+        </div>
+        <button style="background:#fff;border:1px solid #ccc;border-radius:4px;color:#444;padding:3px 10px;font-size:0.82em;">⤢ Expand Full Screen</button>
+      </div>
+
+      <!-- Sheet tabs -->
+      <div style="display:flex;background:#efefef;border-bottom:1px solid #ddd;font-size:0.8em;">
+        <div style="padding:5px 16px;border-bottom:2px solid #1a56db;color:#1a56db;background:#fff;font-weight:bold;cursor:pointer;">Sources & Uses</div>
+        <div style="padding:5px 16px;color:#666;cursor:pointer;">Income & Expenses</div>
+        <div style="padding:5px 16px;color:#666;cursor:pointer;">Cash Flow</div>
+        <div style="padding:5px 16px;color:#666;cursor:pointer;">Returns</div>
+      </div>
+
+      <!-- Formula bar -->
+      <div style="background:#fafafa;border-bottom:1px solid #e8e8e8;padding:3px 10px;display:flex;align-items:center;gap:8px;font-size:0.78em;">
+        <span style="background:#fff;border:1px solid #ddd;border-radius:3px;padding:2px 8px;color:#555;min-width:36px;text-align:center;font-family:monospace;">C3</span>
+        <span style="color:#999;">fx</span>
+        <span style="color:#1a56db;font-family:monospace;">=B3*GFA</span>
+      </div>
+
+      <!-- Spreadsheet — no grid lines, institutional -->
+      <div style="background:#fff;overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.82em;font-family:'Segoe UI',Arial,sans-serif;">
+          <!-- Column headers -->
+          <thead>
+            <tr style="background:#f5f5f5;border-bottom:2px solid #ddd;">
+              <td style="padding:5px 8px;color:#999;width:24px;text-align:center;font-size:0.75em;"></td>
+              <td style="padding:5px 14px;color:#666;font-weight:600;min-width:200px;">A</td>
+              <td style="padding:5px 14px;color:#666;font-weight:600;min-width:120px;text-align:right;">B — Input</td>
+              <td style="padding:5px 14px;color:#666;font-weight:600;min-width:180px;text-align:right;">C — Calculated</td>
+              <td style="padding:5px 14px;color:#666;font-weight:600;min-width:120px;">Source</td>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- Section: Sources & Uses -->
+            <tr style="background:#1a56db;">
+              <td style="padding:4px 8px;color:#aaa;text-align:center;font-size:0.75em;">1</td>
+              <td style="padding:5px 14px;color:#fff;font-weight:700;letter-spacing:0.05em;" colspan="4">SOURCES & USES</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">2</td>
+              <td style="padding:5px 14px;color:#222;">Land / Acquisition</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">$1,200,000</td>
+              <td style="padding:5px 14px;color:#bbb;text-align:right;font-style:italic;">—</td>
+              <td style="padding:5px 14px;color:#888;font-size:0.88em;">User input</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">3</td>
+              <td style="padding:5px 14px;color:#222;">Hard Costs</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">$220 / sf</td>
+              <td style="padding:5px 14px;color:#111;font-weight:500;text-align:right;font-family:monospace;">=B3×GFA → $4,125,000</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 RSMeans <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr>
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">4</td>
+              <td style="padding:5px 14px;color:#222;">Soft Costs</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">15%</td>
+              <td style="padding:5px 14px;color:#111;font-weight:500;text-align:right;font-family:monospace;">=C3×B4 → $618,750</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 ULI Avg <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">5</td>
+              <td style="padding:5px 14px;color:#222;">Financing Costs</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">2.5%</td>
+              <td style="padding:5px 14px;color:#111;font-weight:500;text-align:right;font-family:monospace;">$91,406</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 Fed Rate <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr style="border-top:2px solid #1a56db;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">6</td>
+              <td style="padding:6px 14px;color:#111;font-weight:700;">Total Development Cost</td>
+              <td style="padding:6px 14px;color:#bbb;text-align:right;">—</td>
+              <td style="padding:6px 14px;color:#111;font-weight:700;text-align:right;font-family:monospace;">$6,035,156</td>
+              <td style="padding:6px 14px;"></td>
+            </tr>
+
+            <!-- Section: Income -->
+            <tr style="background:#1a56db;">
+              <td style="padding:4px 8px;color:#aaa;text-align:center;font-size:0.75em;">7</td>
+              <td style="padding:5px 14px;color:#fff;font-weight:700;letter-spacing:0.05em;" colspan="4">INCOME</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">8</td>
+              <td style="padding:5px 14px;color:#222;">Residential Units</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">16</td>
+              <td style="padding:5px 14px;color:#bbb;text-align:right;font-style:italic;">—</td>
+              <td style="padding:5px 14px;color:#888;font-size:0.88em;">User input</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">9</td>
+              <td style="padding:5px 14px;color:#222;">Avg Rent / Unit / Mo</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">$2,400</td>
+              <td style="padding:5px 14px;color:#bbb;text-align:right;font-style:italic;">—</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 HUD FMR <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr>
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">10</td>
+              <td style="padding:5px 14px;color:#222;">Vacancy Rate</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">6%</td>
+              <td style="padding:5px 14px;color:#bbb;text-align:right;font-style:italic;">—</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 Census ACS <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">11</td>
+              <td style="padding:5px 14px;color:#222;">Retail Rent / sf / yr</td>
+              <td style="padding:5px 14px;color:#1a56db;font-weight:600;text-align:right;font-family:monospace;">$28 / sf</td>
+              <td style="padding:5px 14px;color:#bbb;text-align:right;font-style:italic;">—</td>
+              <td style="padding:5px 14px;"><a style="color:#1a56db;text-decoration:none;font-size:0.88em;">🤖 Census CBP <span style="font-size:0.9em;">↗</span></a></td>
+            </tr>
+            <tr style="border-top:2px solid #1a56db;">
+              <td style="padding:4px 8px;color:#bbb;text-align:center;font-size:0.75em;">12</td>
+              <td style="padding:6px 14px;color:#111;font-weight:700;">Effective Gross Income</td>
+              <td style="padding:6px 14px;color:#bbb;text-align:right;">—</td>
+              <td style="padding:6px 14px;color:#111;font-weight:700;text-align:right;font-family:monospace;">$516,576</td>
+              <td style="padding:6px 14px;"></td>
+            </tr>
+
+            <tr>
+              <td colspan="5" style="padding:8px 14px;color:#aaa;font-size:0.85em;font-style:italic;text-align:center;background:#fafafa;">↓ Expenses, Cash Flow, Returns on tabs above ↓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Legend -->
+      <div style="background:#f5f5f5;border-top:1px solid #e0e0e0;padding:7px 14px;display:flex;gap:20px;align-items:center;font-size:0.78em;">
+        <div style="display:flex;align-items:center;gap:5px;color:#444;"><span style="color:#1a56db;font-weight:700;">■</span> Blue = input (editable)</div>
+        <div style="display:flex;align-items:center;gap:5px;color:#444;"><span style="color:#111;font-weight:700;">■</span> Black = calculated output</div>
+        <div style="display:flex;align-items:center;gap:5px;color:#444;"><span style="color:#1a56db;">↗</span> AI source — click to open</div>
+        <div style="margin-left:auto;color:#1a56db;font-weight:600;">⟳ Edit any cell → returns bar updates instantly</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#aaa;font-size:0.9em;">Does this feel locked? Ready to write the spec when you are.</p>

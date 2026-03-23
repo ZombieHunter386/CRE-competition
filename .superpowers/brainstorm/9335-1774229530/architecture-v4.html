@@ -1,0 +1,140 @@
+<h2>SiteStack — Architecture v4</h2>
+<p class="subtitle">BOE · Solve for price · Saved deals · Exports · Pipeline · Deal Contacts</p>
+
+<div class="section">
+  <span class="label">Core User Flow</span>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;">
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">🗺️</div>
+      <strong style="font-size:0.85em;">Map View</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">📍</div>
+      <strong style="font-size:0.85em;">Property Profile</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #9b59ff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">👥</div>
+      <strong style="font-size:0.85em;">Deal Contacts</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">🤖</div>
+      <strong style="font-size:0.85em;">AI Model Builder</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #f0a500;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">📊</div>
+      <strong style="font-size:0.85em;">BOE Model</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">💾</div>
+      <strong style="font-size:0.85em;">Save Deal</strong>
+    </div>
+    <div style="color:#4a9eff;">→</div>
+    <div style="background:#1a1a2e;border:1px solid #4a9eff;border-radius:8px;padding:10px 12px;text-align:center;min-width:95px;">
+      <div style="font-size:1.2em;margin-bottom:3px;">📧</div>
+      <strong style="font-size:0.85em;">Broker Email</strong>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <span class="label" style="color:#9b59ff;">👥 Deal Contacts — CRM Layer</span>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+    <div style="background:#150d1f;border:1px solid #9b59ff;border-radius:8px;padding:14px;">
+      <strong>Contact Roles (multiple per deal)</strong>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">🏠 Owner / Seller</span>
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">🤝 Listing Broker</span>
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">🏦 Buyer's Broker</span>
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">⚖️ Attorney</span>
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">🏗️ Contractor</span>
+        <span style="background:#1f1030;border:1px solid #9b59ff;border-radius:4px;padding:4px 10px;font-size:0.82em;">+ Custom Role</span>
+      </div>
+    </div>
+    <div style="background:#150d1f;border:1px solid #9b59ff;border-radius:8px;padding:14px;">
+      <strong>Per Contact Fields</strong>
+      <ul style="margin-top:8px;padding-left:16px;line-height:1.9;font-size:0.85em;">
+        <li>Name, role, company</li>
+        <li>Phone, email</li>
+        <li>Mailing address (owner auto-filled from tax data)</li>
+        <li>Notes / last contacted</li>
+        <li>Linked to broker email draft</li>
+      </ul>
+    </div>
+  </div>
+  <div style="background:#150d1f;border:1px solid #9b59ff;border-radius:8px;padding:12px;margin-top:10px;font-size:0.85em;color:#ccc;">
+    <strong style="color:#9b59ff;">🔗 Tax data auto-fill:</strong> When PIN is entered, county assessor API pulls owner name + mailing address automatically. User can confirm or override before saving.
+  </div>
+</div>
+
+<div class="section" style="margin-top:16px;">
+  <span class="label" style="color:#f0a500;">📊 BOE Model — Two Modes</span>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+    <div style="background:#1a1500;border:1px solid #f0a500;border-radius:8px;padding:12px;">
+      <strong>Mode A — Know the Price</strong>
+      <p style="font-size:0.85em;color:#ccc;margin-top:6px;">Input asking price → Claude fills assumptions → outputs IRR, equity multiple, cash-on-cash, NOI, cost per unit</p>
+    </div>
+    <div style="background:#1a1500;border:1px solid #f0a500;border-radius:8px;padding:12px;">
+      <strong>Mode B — Solve for Price</strong>
+      <p style="font-size:0.85em;color:#ccc;margin-top:6px;">Input target returns (e.g. 15% IRR, 1.8x equity) → Claude back-solves → outputs max purchase price</p>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px;">
+  <div style="background:#0d1117;border:1px solid #4a9eff;border-radius:8px;padding:12px;">
+    <span class="label" style="color:#4a9eff;">💾 Saved Deals</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.8;font-size:0.83em;">
+      <li>Property + model + contacts saved</li>
+      <li>Reopen &amp; edit any saved deal</li>
+      <li>Saved pins shown on map</li>
+      <li>localStorage</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #f0a500;border-radius:8px;padding:12px;">
+    <span class="label" style="color:#f0a500;">📤 Export Options</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.8;font-size:0.83em;">
+      <li>BOE model → Excel (.xlsx)</li>
+      <li>Deal summary → PDF</li>
+      <li>Concept render image</li>
+      <li>Share link (URL-encoded)</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #4caf50;border-radius:8px;padding:12px;">
+    <span class="label" style="color:#4caf50;">📋 Pipeline Summary</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.8;font-size:0.83em;">
+      <li>All deals in one table</li>
+      <li>Key facts + model outputs</li>
+      <li>IRR, equity mult, NOI, cost/unit</li>
+      <li>Export → Excel or PDF</li>
+    </ul>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:12px;">
+    <span class="label">🤖 AI Capabilities</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.8;font-size:0.83em;">
+      <li>Deal type detection → model selection</li>
+      <li>Smart assumption filling</li>
+      <li>Forward + back solve</li>
+      <li>Concept rendering (DALL-E 3)</li>
+      <li>Broker email (uses contact data)</li>
+    </ul>
+  </div>
+  <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:12px;">
+    <span class="label">🌐 Data + Stack</span>
+    <ul style="margin-top:8px;padding-left:16px;line-height:1.8;font-size:0.83em;">
+      <li>County Assessor API (owner + tax data)</li>
+      <li>Mapbox GL JS · Street View</li>
+      <li>Census/HUD · Claude API · DALL-E 3</li>
+      <li>SheetJS · jsPDF · React + Vite</li>
+    </ul>
+  </div>
+</div>
+
+<p style="margin-top:20px;color:#aaa;font-size:0.9em;">Architecture locked? Ready to move to the UI layout mockup.</p>
