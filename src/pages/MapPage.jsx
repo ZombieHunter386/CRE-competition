@@ -1,3 +1,4 @@
+import MapView from '../components/map/MapView'
 export default function MapPage() {
-  return <div className="h-screen">Map View</div>
+  return <MapView />
 }
