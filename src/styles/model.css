@@ -1,0 +1,14 @@
+/* Override Luckysheet dark defaults for A.CRE white model */
+#luckysheet-cell-main {
+  background: #ffffff !important;
+}
+.luckysheet-cell-selected {
+  border: 2px solid #1a56db !important;
+  background: rgba(26, 86, 219, 0.08) !important;
+}
+.luckysheet-scrollbar-ltr,
+.luckysheet-scrollbar-ltr *,
+.luckysheet-cols-h-cells,
+.luckysheet-rows-h {
+  background: #f5f5f5 !important;
+}
