@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl'
 import { getSettings } from '../../store/settings'
 import { getDeals, saveDeal, createEmptyDeal } from '../../store/deals'
 import BottomDrawer from './BottomDrawer'
+import AddressSearch from './AddressSearch'
 import { useNavigate } from 'react-router-dom'
 
 const DEAL_TYPE_COLORS = {
@@ -70,6 +71,10 @@ export default function MapView() {
 
   return (
     <div className="relative h-[calc(100vh-3rem)]">
+      <AddressSearch onSelect={(feature) => {
+        const [lng, lat] = feature.center
+        map.current?.flyTo({ center: [lng, lat], zoom: 16 })
+      }} />
       <div ref={mapContainer} className="w-full h-full" />
       {selectedDeal && (
         <BottomDrawer
