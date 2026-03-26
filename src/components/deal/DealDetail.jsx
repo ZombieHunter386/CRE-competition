@@ -39,7 +39,12 @@ export default function DealDetail() {
         <div className="flex items-center gap-3">
           <button onClick={() => navigate('/')} className="text-blue-400">← Map</button>
           <span className="text-gray-600">|</span>
-          <span className="text-white font-semibold">{deal.address || 'New Property'}</span>
+          <input
+            className="bg-transparent text-white font-semibold outline-none border-b border-transparent hover:border-gray-600 focus:border-blue-400 min-w-[160px]"
+            placeholder={deal.address || 'Deal Name'}
+            value={deal.name}
+            onChange={e => updateDeal({ name: e.target.value })}
+          />
           {deal.dealType && (
             <span className="bg-green-900 border border-green-500 text-green-400 text-xs px-2 py-0.5 rounded">
               {DEAL_TYPE_LABELS[deal.dealType] || deal.dealType}

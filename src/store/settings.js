@@ -1,12 +1,9 @@
 const KEY = 'sitestack_settings'
 
 const DEFAULTS = {
-  mapboxToken: '',
-  claudeApiKey: '',
+  mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN || '',
   openaiApiKey: '',
-  googleMapsKey: '',
-  countyApiEndpoint: '',
-  countyApiKey: '',
+  geminiApiKey: '',
   userName: '',
   hurdleIrr: 12,
   hurdleEquityMultiple: 1.75,

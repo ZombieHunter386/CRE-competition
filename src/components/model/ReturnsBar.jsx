@@ -4,13 +4,14 @@ export default function ReturnsBar({ outputs, pinnedCells, onUnpin, onExportExce
   const { hurdleIrr, hurdleEquityMultiple } = getSettings()
   const pencils = outputs?.leverIrr >= hurdleIrr && outputs?.equityMultiple >= hurdleEquityMultiple
 
+  const fmt = (v, fn) => (v != null && !isNaN(v)) ? fn(v) : '—'
   const DEFAULT_PINS = [
-    { label: 'Levered IRR', key: 'leverIrr', format: v => `${v?.toFixed(1)}%`, green: true },
-    { label: 'Equity Multiple', key: 'equityMultiple', format: v => `${v?.toFixed(2)}×`, green: true },
-    { label: 'Cash-on-Cash Yr 1', key: 'cashOnCash', format: v => `${v?.toFixed(1)}%` },
-    { label: 'NOI', key: 'noi', format: v => `$${v?.toLocaleString()}` },
-    { label: 'Total Dev Cost', key: 'totalDevCost', format: v => `$${(v / 1e6).toFixed(1)}M` },
-    { label: 'Cost/Unit', key: 'costPerUnit', format: v => `$${Math.round(v / 1000)}K` },
+    { label: 'Levered IRR', key: 'leverIrr', format: v => fmt(v, v => `${v.toFixed(1)}%`), green: true },
+    { label: 'Equity Multiple', key: 'equityMultiple', format: v => fmt(v, v => `${v.toFixed(2)}×`), green: true },
+    { label: 'Cash-on-Cash Yr 1', key: 'cashOnCash', format: v => fmt(v, v => `${v.toFixed(1)}%`) },
+    { label: 'NOI', key: 'noi', format: v => fmt(v, v => `$${v.toLocaleString()}`) },
+    { label: 'Total Dev Cost', key: 'totalDevCost', format: v => fmt(v, v => `$${(v / 1e6).toFixed(1)}M`) },
+    { label: 'Cost/Unit', key: 'costPerUnit', format: v => fmt(v, v => `$${Math.round(v / 1000)}K`) },
   ]
 
   const displayPins = [

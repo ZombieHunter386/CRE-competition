@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { fetchParcelByPin } from '../../services/county'
 import { getStreetViewUrl } from '../../services/streetview'
-import { generateConceptRender } from '../../services/dalle'
+import { generateConceptRender } from '../../services/gemini-image'
 
 export default function ProfileTab({ deal, onUpdate }) {
   const [pin, setPin] = useState(deal.propertyFacts?.pin || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [renderLoading, setRenderLoading] = useState(false)
+  const [imageLoading, setImageLoading] = useState(false)
 
   async function handlePinLookup() {
     if (!pin) return
@@ -45,7 +46,6 @@ export default function ProfileTab({ deal, onUpdate }) {
     ['Assessed Value', f.assessedValue ? `$${f.assessedValue?.toLocaleString()}` : null],
     ['Tax Year', f.taxYear], ['Owner Name', f.ownerName],
     ['Owner Address', f.ownerAddress],
-    ['Annual Taxes', f.annualTaxes ? `$${f.annualTaxes?.toLocaleString()}` : null],
     ['Year Built', f.yearBuilt],
   ]
 
@@ -57,13 +57,22 @@ export default function ProfileTab({ deal, onUpdate }) {
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#161b22] border border-gray-700 rounded-lg overflow-hidden">
             {deal.streetViewUrl
-              ? <img src={deal.streetViewUrl} alt="Street View" className="w-full h-36 object-cover" />
+              ? <iframe src={deal.streetViewUrl} title="Street View" className="w-full h-36 border-0" allowFullScreen />
               : <div className="h-36 flex items-center justify-center text-gray-600">Street View</div>}
             <div className="text-center text-gray-400 text-xs py-1">Street View</div>
           </div>
           <div className="bg-[#161b22] border border-purple-700 rounded-lg overflow-hidden">
             {deal.conceptRenderUrl
-              ? <img src={deal.conceptRenderUrl} alt="Concept Render" className="w-full h-36 object-cover" />
+              ? <>
+                  {imageLoading && <div className="h-36 flex items-center justify-center text-purple-400 text-xs animate-pulse">Generating image...</div>}
+                  <img
+                    src={deal.conceptRenderUrl}
+                    alt="Concept Render"
+                    className={`w-full h-36 object-cover ${imageLoading ? 'hidden' : ''}`}
+                    onLoad={() => setImageLoading(false)}
+                    onError={() => setImageLoading(false)}
+                  />
+                </>
               : <div className="h-36 flex items-center justify-center text-gray-600">AI Render</div>}
             <div className="text-center text-purple-400 text-xs py-1">AI Concept Render</div>
           </div>
@@ -72,14 +81,18 @@ export default function ProfileTab({ deal, onUpdate }) {
         <button
           onClick={async () => {
             setRenderLoading(true)
+            setError(null)
             try {
               const result = await generateConceptRender({
                 dealType: deal.dealType || 'mixed_use',
                 description: deal.description,
-                propertyFacts: deal.propertyFacts,
+                propertyFacts: deal.propertyFacts || {},
                 municipality: deal.address,
               })
-              onUpdate({ conceptRenderUrl: result.url, zoningContext: result.zoningContext })
+              setImageLoading(true)
+              onUpdate({ conceptRenderUrl: result.url })
+            } catch (e) {
+              setError(`Render failed: ${e.message}`)
             } finally {
               setRenderLoading(false)
             }
@@ -114,7 +127,7 @@ export default function ProfileTab({ deal, onUpdate }) {
         <div className="flex gap-2 mb-4">
           <input
             type="text"
-            placeholder="Enter PIN / Parcel Number"
+            placeholder="Enter PIN (e.g. 14-21-101-001-0000) or Address"
             value={pin}
             onChange={e => setPin(e.target.value)}
             className="flex-1 bg-gray-900 border border-gray-600 text-white text-sm px-3 py-1.5 rounded outline-none"

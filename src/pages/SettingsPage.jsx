@@ -18,16 +18,7 @@ export default function SettingsPage() {
       title: '🔑 API Keys',
       fields: [
         { key: 'mapboxToken', label: 'Mapbox Token', placeholder: 'pk.eyJ1...' },
-        { key: 'claudeApiKey', label: 'Claude API Key', placeholder: 'sk-ant-...' },
-        { key: 'openaiApiKey', label: 'OpenAI API Key (DALL-E)', placeholder: 'sk-...' },
-        { key: 'googleMapsKey', label: 'Google Maps API Key', placeholder: 'AIza...' },
-      ]
-    },
-    {
-      title: '🏛️ County Assessor API',
-      fields: [
-        { key: 'countyApiEndpoint', label: 'County API Endpoint URL', placeholder: 'https://datacatalog.cookcountyil.gov/resource/...' },
-        { key: 'countyApiKey', label: 'County API Key (if required)', placeholder: 'Optional' },
+        { key: 'geminiApiKey', label: 'Gemini API Key (Image Generation)', placeholder: 'AIza...' },
       ]
     },
     {

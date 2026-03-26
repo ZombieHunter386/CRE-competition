@@ -1,38 +1,26 @@
+import { GoogleGenAI } from '@google/genai'
 import { getSettings } from '../store/settings'
 
-function getApiKey() {
-  const { claudeApiKey } = getSettings()
-  return claudeApiKey || import.meta.env.VITE_CLAUDE_API_KEY
+function getClient() {
+  const { geminiApiKey } = getSettings()
+  return new GoogleGenAI({ apiKey: geminiApiKey || import.meta.env.VITE_GEMINI_API_KEY })
 }
 
-async function callClaude(prompt, maxTokens) {
-  const apiKey = getApiKey()
-  if (!apiKey) throw new Error('Claude API key not configured. Go to Settings.')
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-allow-browser': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }]
-    })
+async function callGemini(prompt, maxTokens) {
+  const { geminiApiKey } = getSettings()
+  if (!geminiApiKey && !import.meta.env.VITE_GEMINI_API_KEY) throw new Error('Gemini API key not configured. Go to Settings.')
+  const client = getClient()
+  const response = await client.models.generateContent({
+    model: 'gemini-2.0-flash',
+    contents: prompt,
+    config: { maxOutputTokens: maxTokens },
   })
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}))
-    throw new Error(err.error?.message || `Claude API error: ${response.status}`)
-  }
-  const data = await response.json()
-  return data.content[0].text
+  return response.text
 }
 
 export async function detectDealType({ zoning, currentUse, lotSize, description }) {
   const prompt = `Given these property details, classify the deal type as one of: multifamily, commercial, mixed_use, single_family.\nZoning: ${zoning}, Current Use: ${currentUse}, Lot Size: ${lotSize} sf, Description: ${description}\nRespond with just the deal type key, nothing else.`
-  const text = await callClaude(prompt, 100)
+  const text = await callGemini(prompt, 100)
   return text.trim()
 }
 
@@ -60,13 +48,13 @@ Respond with a JSON object containing these fields:
     "vacancyRate": { "label": "Census ACS", "url": "https://data.census.gov" },
     "hardCostPerSf": { "label": "RSMeans", "url": "https://www.rsmeans.com" },
     "softCostsPct": { "label": "ULI Benchmark", "url": "https://uli.org" },
-    "exitCapRate": { "label": "Claude estimate", "url": null },
+    "exitCapRate": { "label": "Gemini estimate", "url": null },
     "financingCostsPct": { "label": "Federal Reserve", "url": "https://www.federalreserve.gov/releases/h15/" },
     "opexRatio": { "label": "IREM", "url": "https://www.irem.org" }
   }
 
 Respond with only valid JSON, no markdown or explanation.`
-  const text = await callClaude(prompt, 1000)
+  const text = await callGemini(prompt, 1000)
   return JSON.parse(text)
 }
 
@@ -92,7 +80,7 @@ Calculate the maximum purchase price that achieves the target returns. Respond w
 }
 
 Respond with only valid JSON, no markdown or explanation.`
-  const text = await callClaude(prompt, 500)
+  const text = await callGemini(prompt, 500)
   return JSON.parse(text)
 }
 
@@ -116,7 +104,7 @@ Respond with a JSON object:
 }
 
 Respond with only valid JSON, no markdown or explanation.`
-  const text = await callClaude(prompt, 400)
+  const text = await callGemini(prompt, 400)
   return JSON.parse(text)
 }
 
@@ -128,5 +116,5 @@ Deal Type: ${deal.dealType}
 Key Outputs: ${JSON.stringify(outputs)}
 
 Write 3-4 short paragraphs, concise and professional. The email should introduce the sender, mention the specific property and deal opportunity, reference relevant financial metrics from the outputs, and include a clear call to action.`
-  return await callClaude(prompt, 600)
+  return await callGemini(prompt, 600)
 }

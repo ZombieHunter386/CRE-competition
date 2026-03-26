@@ -80,7 +80,7 @@ export default function PipelineSummary() {
                   return (
                     <tr key={deal.id} className="border-b border-gray-800 hover:bg-gray-900 cursor-pointer"
                       onClick={() => navigate(`/deal/${deal.id}`)}>
-                      <td className="px-3 py-2 text-white">{deal.address || 'Untitled'}</td>
+                      <td className="px-3 py-2 text-white">{deal.name || deal.address || 'Untitled'}</td>
                       <td className="px-3 py-2 text-gray-300 capitalize">{deal.dealType?.replace('_', ' ') || '—'}</td>
                       <td className="px-3 py-2 text-green-400 font-semibold">{o.leverIrr ? `${o.leverIrr.toFixed(1)}%` : '—'}</td>
                       <td className="px-3 py-2 text-green-400 font-semibold">{o.equityMultiple ? `${o.equityMultiple.toFixed(2)}×` : '—'}</td>

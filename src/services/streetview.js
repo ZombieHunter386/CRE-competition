@@ -1,7 +1,4 @@
-import { getSettings } from '../store/settings'
-
 export function getStreetViewUrl(lat, lng) {
-  const { googleMapsKey } = getSettings()
-  if (!googleMapsKey) return null
-  return `https://maps.googleapis.com/maps/api/streetview?size=400x250&location=${lat},${lng}&key=${googleMapsKey}`
+  if (!lat || !lng) return null
+  return `https://maps.google.com/maps?q=${lat},${lng}&layer=c&cbll=${lat},${lng}&output=svembed`
 }

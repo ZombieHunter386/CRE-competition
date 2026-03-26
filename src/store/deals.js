@@ -35,6 +35,7 @@ export function deleteDeal(id) {
 export function createEmptyDeal(lat, lng) {
   return {
     id: uuidv4(),
+    name: '',
     address: '',
     lat,
     lng,

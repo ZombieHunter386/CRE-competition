@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import MapPage from './pages/MapPage'
 import DealPage from './pages/DealPage'
@@ -7,7 +7,7 @@ import SettingsPage from './pages/SettingsPage'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Navbar />
       <div className="pt-12">
         <Routes>
@@ -17,6 +17,6 @@ export default function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
