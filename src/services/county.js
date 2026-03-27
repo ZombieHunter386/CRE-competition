@@ -44,8 +44,10 @@ export async function fetchParcelByPin(query) {
     ])
   } else {
     const escaped = trimmed.toUpperCase().replace(/'/g, "''")
+    // Use wildcard between parts so "217 WACKER" matches "217 S WACKER DR"
+    const pattern = escaped.split(/\s+/).join('%')
     addrRow = await socrata(ADDRESSES_API,
-      `upper(prop_address_full) like '%${escaped}%'`,
+      `upper(prop_address_full) like '${pattern}%'`,
       'pin,prop_address_full,prop_address_city_name,prop_address_state,prop_address_zipcode_1,owner_address_name,owner_address_full,owner_address_city_name,owner_address_state,owner_address_zipcode_1,year')
     if (!addrRow) throw new Error('No parcel found for that address.')
     pin = addrRow.pin
@@ -103,4 +105,20 @@ function normalizeParcelData(a, v, c, isComm) {
       ? (c.yearbuilt  ? parseInt(c.yearbuilt)  : null)
       : (c.char_yrblt ? parseInt(c.char_yrblt) : null),
   }
+}
+
+export async function reverseGeocode(lat, lng, token) {
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address&limit=1&access_token=${token}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Reverse geocode failed: ${res.status}`)
+  const data = await res.json()
+  const feature = data.features?.[0]
+  if (!feature) throw new Error('No address found at this location')
+  // Extract just the street address (house number + street name)
+  // Cook County LIKE query handles partial match — no city/state needed
+  const streetName = (feature.text || '')
+    .replace(/^(north|south|east|west)\s+/i, '')
+    .replace(/\s+(drive|street|avenue|road|boulevard|lane|court|place|way|terrace|circle|trail|parkway|highway|ave|blvd|dr|st|rd|ln|ct|pl|hwy)$/i, '')
+    .trim()
+  return `${feature.address || ''} ${streetName}`.trim()
 }

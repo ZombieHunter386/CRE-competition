@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import * as XLSX from 'xlsx'
+import { xlsxBufferToLuckysheetData } from '../../utils/xlsxParse'
 
 export default function ModelUpload({ onModelLoaded }) {
   const fileRef = useRef()
@@ -9,30 +9,10 @@ export default function ModelUpload({ onModelLoaded }) {
     if (!file) return
     const reader = new FileReader()
     reader.onload = (ev) => {
-      const workbook = XLSX.read(ev.target.result, { type: 'binary' })
-      const sheets = workbook.SheetNames.map(name => ({
-        name,
-        celldata: xlsxSheetToLuckysheetCelldata(workbook.Sheets[name]),
-        config: {},
-      }))
-      onModelLoaded({ sheets, source: 'upload', fileName: file.name })
+      const modelData = xlsxBufferToLuckysheetData(ev.target.result, file.name)
+      onModelLoaded(modelData)
     }
-    reader.readAsBinaryString(file)
-  }
-
-  function xlsxSheetToLuckysheetCelldata(sheet) {
-    const celldata = []
-    const range = XLSX.utils.decode_range(sheet['!ref'] || 'A1:A1')
-    for (let r = range.s.r; r <= range.e.r; r++) {
-      for (let c = range.s.c; c <= range.e.c; c++) {
-        const cellAddr = XLSX.utils.encode_cell({ r, c })
-        const cell = sheet[cellAddr]
-        if (cell) {
-          celldata.push({ r, c, v: { v: cell.v, f: cell.f, ct: { t: cell.t === 'n' ? 'n' : 'g' } } })
-        }
-      }
-    }
-    return celldata
+    reader.readAsArrayBuffer(file)
   }
 
   return (

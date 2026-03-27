@@ -1,29 +1,25 @@
 import { getSettings } from '../../store/settings'
 
-export default function ReturnsBar({ outputs, pinnedCells, onUnpin, onExportExcel, onExportPdf }) {
+// Format a raw cell value based on the label
+function formatPin(label, value) {
+  if (value == null || isNaN(value)) return '—'
+  const l = label.toLowerCase()
+  if (l.includes('irr') || l.includes('cash on cash') || l.includes('coc'))
+    return `${(value * 100).toFixed(1)}%`
+  if (l.includes('multiple') || l.includes('em'))
+    return `${Number(value).toFixed(2)}×`
+  return String(value)
+}
+
+export default function ReturnsBar({ pinnedCells, onUnpin, onExportExcel, onExportPdf }) {
   const { hurdleIrr, hurdleEquityMultiple } = getSettings()
-  const pencils = outputs?.leverIrr >= hurdleIrr && outputs?.equityMultiple >= hurdleEquityMultiple
 
-  const fmt = (v, fn) => (v != null && !isNaN(v)) ? fn(v) : '—'
-  const DEFAULT_PINS = [
-    { label: 'Levered IRR', key: 'leverIrr', format: v => fmt(v, v => `${v.toFixed(1)}%`), green: true },
-    { label: 'Equity Multiple', key: 'equityMultiple', format: v => fmt(v, v => `${v.toFixed(2)}×`), green: true },
-    { label: 'Cash-on-Cash Yr 1', key: 'cashOnCash', format: v => fmt(v, v => `${v.toFixed(1)}%`) },
-    { label: 'NOI', key: 'noi', format: v => fmt(v, v => `$${v.toLocaleString()}`) },
-    { label: 'Total Dev Cost', key: 'totalDevCost', format: v => fmt(v, v => `$${(v / 1e6).toFixed(1)}M`) },
-    { label: 'Cost/Unit', key: 'costPerUnit', format: v => fmt(v, v => `$${Math.round(v / 1000)}K`) },
-  ]
-
-  const displayPins = [
-    ...DEFAULT_PINS,
-    ...pinnedCells.map(p => ({
-      label: p.label,
-      value: p.value,
-      cellRef: `[${p.sheetName}!${p.col}${p.row}]`,
-      custom: true,
-      id: p.id,
-    })),
-  ]
+  const irrPin = pinnedCells.find(p => p.label.toLowerCase().includes('irr'))
+  const emPin  = pinnedCells.find(p => p.label.toLowerCase().includes('multiple'))
+  const irrVal = irrPin?.value != null ? irrPin.value * 100 : null
+  const emVal  = emPin?.value ?? null
+  const pencils = irrVal != null && emVal != null
+    && irrVal >= hurdleIrr && emVal >= hurdleEquityMultiple
 
   return (
     <div className="bg-[#161b22] border border-green-700 rounded-lg p-3 mb-3">
@@ -38,32 +34,31 @@ export default function ReturnsBar({ outputs, pinnedCells, onUnpin, onExportExce
           <button onClick={onExportPdf} className="bg-blue-900 border border-blue-500 text-blue-400 text-xs px-3 py-1 rounded">📄 PDF</button>
         </div>
       </div>
+
       <div className="flex gap-2 flex-wrap items-center">
-        {displayPins.map(pin => {
-          const val = pin.value ?? (outputs?.[pin.key])
-          const formatted = pin.format ? pin.format(val) : val
-          return (
-            <div key={pin.label}
-              className={`relative border rounded-lg px-3 py-1.5 text-center min-w-[80px] ${
-                pin.green ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
-              }`}>
-              <div className="text-gray-500 text-xs">{pin.label}
-                {pin.cellRef && <span className="text-gray-600 text-xs ml-1">{pin.cellRef}</span>}
-              </div>
-              <div className={`font-bold text-sm ${pin.green ? 'text-green-400' : 'text-white'}`}>
-                {formatted ?? '—'}
-              </div>
-              {pin.custom && (
-                <button onClick={() => onUnpin(pin.id)}
-                  className="absolute -top-1 -right-1 text-gray-600 text-xs hover:text-red-400">✕</button>
-              )}
+        {pinnedCells.map((pin) => (
+          <div key={pin.id}
+            className={`relative border rounded-lg px-3 py-1.5 text-center min-w-[100px] ${
+              pin.isDefault ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
+            }`}>
+            <div className="text-gray-500 text-xs">{pin.label}</div>
+            <div className={`font-bold text-sm ${pin.isDefault ? 'text-green-400' : 'text-white'}`}>
+              {formatPin(pin.label, pin.value)}
             </div>
-          )
-        })}
-        <div className="border border-dashed border-gray-700 rounded-lg px-3 py-1.5 text-center min-w-[80px] cursor-pointer">
+            {!pin.isDefault && (
+              <button onClick={() => onUnpin(pin.id)}
+                className="absolute -top-1 -right-1 text-gray-600 text-xs hover:text-red-400">✕</button>
+            )}
+          </div>
+        ))}
+
+        {/* Add-pin hint */}
+        <div className="border border-dashed border-gray-700 rounded-lg px-3 py-1.5 text-center min-w-[80px]">
           <div className="text-gray-600 text-xs">+ Pin a cell</div>
           <div className="text-gray-700 text-xs">highlight in model</div>
         </div>
+
+        {/* Pencils indicator */}
         <div className="ml-auto flex items-center gap-2 pl-3 border-l border-gray-700">
           <span>{pencils ? '✅' : '❌'}</span>
           <span className={`font-bold text-sm ${pencils ? 'text-green-400' : 'text-red-400'}`}>

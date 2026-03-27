@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { fetchParcelByPin } from '../../services/county'
+import { useState, useEffect } from 'react'
+import { fetchParcelByPin, reverseGeocode } from '../../services/county'
 import { getStreetViewUrl } from '../../services/streetview'
 import { generateConceptRender } from '../../services/gemini-image'
+import { getSettings } from '../../store/settings'
 
 export default function ProfileTab({ deal, onUpdate }) {
   const [pin, setPin] = useState(deal.propertyFacts?.pin || '')
@@ -9,6 +10,37 @@ export default function ProfileTab({ deal, onUpdate }) {
   const [error, setError] = useState(null)
   const [renderLoading, setRenderLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
+
+  useEffect(() => {
+    if (!deal.lat || !deal.lng || deal.propertyFacts?.pin) return
+    const { mapboxToken } = getSettings()
+    if (!mapboxToken) return
+    setLoading(true)
+    reverseGeocode(deal.lat, deal.lng, mapboxToken)
+      .then(address => fetchParcelByPin(address))
+      .then(facts => {
+        const streetViewUrl = getStreetViewUrl(deal.lat, deal.lng)
+        const contacts = deal.contacts || []
+        setPin(facts.pin || '')
+        onUpdate({
+          propertyFacts: { ...facts },
+          address: facts.address || deal.address,
+          streetViewUrl,
+          contacts: contacts.some(c => c.role === 'owner') ? contacts : [
+            ...contacts,
+            {
+              id: crypto.randomUUID(), role: 'owner',
+              name: facts.ownerName, company: '',
+              phone: '', email: '',
+              address: facts.ownerAddress,
+              lastContacted: null, autoFilled: true,
+            }
+          ]
+        })
+      })
+      .catch(() => { /* silent — leave form empty for manual entry */ })
+      .finally(() => setLoading(false))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handlePinLookup() {
     if (!pin) return
@@ -42,7 +74,7 @@ export default function ProfileTab({ deal, onUpdate }) {
   const f = deal.propertyFacts || {}
   const FACT_FIELDS = [
     ['PIN', f.pin], ['Lot Size', f.lotSize ? `${f.lotSize?.toLocaleString()} sf` : null],
-    ['Zoning', f.zoning], ['Current Use', f.currentUse],
+    ['Property Type', f.zoning], ['Neighborhood', f.currentUse],
     ['Assessed Value', f.assessedValue ? `$${f.assessedValue?.toLocaleString()}` : null],
     ['Tax Year', f.taxYear], ['Owner Name', f.ownerName],
     ['Owner Address', f.ownerAddress],
