@@ -21,7 +21,7 @@ export default function ProfileTab({ deal, onUpdate }) {
       .then(facts => {
         const streetViewUrl = getStreetViewUrl(deal.lat, deal.lng)
         onUpdate({
-          propertyFacts: { ...facts, pin: facts.pin },
+          propertyFacts: { ...facts },
           address: facts.address || deal.address,
           streetViewUrl,
           contacts: deal.contacts.some(c => c.role === 'owner') ? deal.contacts : [
