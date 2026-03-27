@@ -1,11 +1,26 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import ReturnsBar from './ReturnsBar'
 import ModelViewer from './ModelViewer'
 import ModelUpload from './ModelUpload'
 import { xlsxBufferToLuckysheetData } from '../../utils/xlsxParse'
 import { exportToExcel, exportToPdf } from '../../utils/export'
 
-const DEFAULT_PINS = []
+// Summary sheet: U14=IRR, U15=Equity Multiple, U16=Avg Cash on Cash
+// U = col 20 (0-indexed), rows 13/14/15 (0-indexed)
+const DEFAULT_PINS = [
+  { label: 'IRR',                sheetName: 'Summary', row: 13, col: 20 },
+  { label: 'Equity Multiple',    sheetName: 'Summary', row: 14, col: 20 },
+  { label: 'Avg Cash on Cash',   sheetName: 'Summary', row: 15, col: 20 },
+]
+
+function extractPinnedValues(luckysheetData, pins) {
+  if (!luckysheetData?.sheets) return pins
+  return pins.map(p => {
+    const sheet = luckysheetData.sheets.find(s => s.name?.toLowerCase() === p.sheetName?.toLowerCase())
+    const cell  = sheet?.celldata?.find(c => c.r === p.row && c.c === p.col)
+    return { ...p, value: cell?.v?.v ?? null }
+  })
+}
 
 export default function ModelTab({ deal, onUpdate }) {
   const [modelSource, setModelSource] = useState(
@@ -14,8 +29,7 @@ export default function ModelTab({ deal, onUpdate }) {
   const [loading, setLoading] = useState(false)
   const [selectedCell, setSelectedCell] = useState(null)
 
-  const modelData = deal.model?.luckysheetData
-  const outputs = deal.model?.outputs || {}
+  const modelData   = deal.model?.luckysheetData
   const pinnedCells = deal.model?.pinnedCells || []
 
   async function loadDefault() {
@@ -25,7 +39,9 @@ export default function ModelTab({ deal, onUpdate }) {
       if (!res.ok) throw new Error(`Template not found (${res.status})`)
       const buf = await res.arrayBuffer()
       const data = xlsxBufferToLuckysheetData(buf, 'default-model.xlsx')
-      const autoPins = DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID(), value: null }))
+      const autoPins = extractPinnedValues(data,
+        DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID() }))
+      )
       onUpdate({
         model: {
           ...deal.model,
@@ -67,7 +83,6 @@ export default function ModelTab({ deal, onUpdate }) {
     <div className="p-4">
       {/* Returns bar */}
       <ReturnsBar
-        outputs={outputs}
         pinnedCells={pinnedCells}
         onUnpin={unpinCell}
         onExportExcel={() => exportToExcel(deal)}
@@ -128,7 +143,9 @@ export default function ModelTab({ deal, onUpdate }) {
               modelData={modelData}
               onCellSelected={handleCellSelected}
               onCellUpdated={(allSheets) => {
-                onUpdate({ model: { ...deal.model, luckysheetData: { ...modelData, sheets: allSheets } } })
+                const updatedData = { ...modelData, sheets: allSheets }
+                const refreshed   = extractPinnedValues(updatedData, pinnedCells)
+                onUpdate({ model: { ...deal.model, luckysheetData: updatedData, pinnedCells: refreshed } })
               }}
             />
           : <div className="h-48 flex items-center justify-center text-gray-500 bg-[#0d1117] text-sm">
