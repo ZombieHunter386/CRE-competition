@@ -114,5 +114,9 @@ export async function reverseGeocode(lat, lng, token) {
   if (!feature) throw new Error('No address found at this location')
   // Extract just the street address (house number + street name)
   // Cook County LIKE query handles partial match — no city/state needed
-  return `${feature.address || ''} ${feature.text || ''}`.trim()
+  const streetName = (feature.text || '')
+    .replace(/^(north|south|east|west)\s+/i, '')
+    .replace(/\s+(drive|street|avenue|road|boulevard|lane|court|place|way|terrace|circle|trail|parkway|highway|ave|blvd|dr|st|rd|ln|ct|pl|hwy)$/i, '')
+    .trim()
+  return `${feature.address || ''} ${streetName}`.trim()
 }
