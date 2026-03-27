@@ -5,10 +5,7 @@ import ModelUpload from './ModelUpload'
 import { xlsxBufferToLuckysheetData } from '../../utils/xlsxParse'
 import { exportToExcel, exportToPdf } from '../../utils/export'
 
-const DEFAULT_PINS = {
-  acquisition: [],
-  development: [],
-}
+const DEFAULT_PINS = []
 
 export default function ModelTab({ deal, onUpdate }) {
   const [modelSource, setModelSource] = useState(
@@ -21,14 +18,14 @@ export default function ModelTab({ deal, onUpdate }) {
   const outputs = deal.model?.outputs || {}
   const pinnedCells = deal.model?.pinnedCells || []
 
-  async function loadDefault(type) {
+  async function loadDefault() {
     setLoading(true)
     try {
-      const res = await fetch(`/models/default-${type}.xlsx`)
+      const res = await fetch('/models/default-model.xlsx')
       if (!res.ok) throw new Error(`Template not found (${res.status})`)
       const buf = await res.arrayBuffer()
-      const data = xlsxBufferToLuckysheetData(buf, `default-${type}.xlsx`)
-      const autoPins = DEFAULT_PINS[type].map(p => ({ ...p, id: crypto.randomUUID(), value: null }))
+      const data = xlsxBufferToLuckysheetData(buf, 'default-model.xlsx')
+      const autoPins = DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID(), value: null }))
       onUpdate({
         model: {
           ...deal.model,
@@ -37,7 +34,7 @@ export default function ModelTab({ deal, onUpdate }) {
           pinnedCells: autoPins,
         }
       })
-      setModelSource(type)
+      setModelSource('default')
     } catch (e) {
       alert(`Could not load default template: ${e.message}`)
     } finally {
@@ -83,19 +80,13 @@ export default function ModelTab({ deal, onUpdate }) {
         <div className="bg-[#161b22] px-4 py-2 flex items-center justify-between border-b border-gray-700">
           <div className="flex items-center gap-3">
             <span className="text-white font-bold text-sm">Model</span>
-            {/* 3-source selector */}
+            {/* 2-source selector */}
             <div className="flex bg-[#0d1117] border border-gray-700 rounded overflow-hidden text-xs">
               <button
-                onClick={() => loadDefault('acquisition')}
+                onClick={loadDefault}
                 disabled={loading}
-                className={`px-3 py-1.5 transition-colors disabled:opacity-50 ${modelSource === 'acquisition' ? 'bg-blue-600 text-white font-semibold' : 'text-gray-400 hover:text-gray-200'}`}>
-                📊 Default Acquisition
-              </button>
-              <button
-                onClick={() => loadDefault('development')}
-                disabled={loading}
-                className={`px-3 py-1.5 transition-colors disabled:opacity-50 ${modelSource === 'development' ? 'bg-blue-600 text-white font-semibold' : 'text-gray-400 hover:text-gray-200'}`}>
-                🏗️ Default Development
+                className={`px-3 py-1.5 transition-colors disabled:opacity-50 ${modelSource === 'default' ? 'bg-blue-600 text-white font-semibold' : 'text-gray-400 hover:text-gray-200'}`}>
+                📊 Default Model
               </button>
               <button
                 onClick={() => setModelSource('upload')}
