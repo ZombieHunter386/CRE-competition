@@ -17,14 +17,21 @@ function extractPinnedValues(luckysheetData, pins) {
   if (!luckysheetData?.sheets) return pins
   return pins.map(p => {
     const sheet = luckysheetData.sheets.find(s => s.name?.toLowerCase() === p.sheetName?.toLowerCase())
-    const cell  = sheet?.celldata?.find(c => c.r === p.row && c.c === p.col)
+    if (!sheet) return { ...p, value: null }
+    // getAllSheets() returns data[r][c] (2D sparse array)
+    if (sheet.data) {
+      const cell = sheet.data[p.row]?.[p.col]
+      return { ...p, value: cell?.v ?? null }
+    }
+    // xlsxBufferToLuckysheetData returns celldata [{r, c, v: {v, f}}]
+    const cell = sheet.celldata?.find(c => c.r === p.row && c.c === p.col)
     return { ...p, value: cell?.v?.v ?? null }
   })
 }
 
 export default function ModelTab({ deal, onUpdate }) {
   const [modelSource, setModelSource] = useState(
-    deal.model?.uploadedModel ? 'upload' : null
+    deal.model?.luckysheetData?.source ?? null
   )
   const [loading, setLoading] = useState(false)
   const [selectedCell, setSelectedCell] = useState(null)
@@ -38,9 +45,9 @@ export default function ModelTab({ deal, onUpdate }) {
       const res = await fetch('/models/default-model.xlsx')
       if (!res.ok) throw new Error(`Template not found (${res.status})`)
       const buf = await res.arrayBuffer()
-      const data = xlsxBufferToLuckysheetData(buf, 'default-model.xlsx')
+      const data = { ...xlsxBufferToLuckysheetData(buf, 'default-model.xlsx'), source: 'default' }
       const autoPins = extractPinnedValues(data,
-        DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID() }))
+        DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID(), isDefault: true }))
       )
       onUpdate({
         model: {
@@ -116,7 +123,9 @@ export default function ModelTab({ deal, onUpdate }) {
         {/* Upload panel — only when Upload My Own is selected */}
         {modelSource === 'upload' && (
           <ModelUpload onModelLoaded={(data) => {
-            onUpdate({ model: { ...deal.model, luckysheetData: data, uploadedModel: data.fileName } })
+            const uploadData = { ...data, source: 'upload' }
+            onUpdate({ model: { ...deal.model, luckysheetData: uploadData, uploadedModel: uploadData.fileName, pinnedCells: [] } })
+            setModelSource('upload')
           }} />
         )}
 

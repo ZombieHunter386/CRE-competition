@@ -20,12 +20,14 @@ export default function ProfileTab({ deal, onUpdate }) {
       .then(address => fetchParcelByPin(address))
       .then(facts => {
         const streetViewUrl = getStreetViewUrl(deal.lat, deal.lng)
+        const contacts = deal.contacts || []
+        setPin(facts.pin || '')
         onUpdate({
           propertyFacts: { ...facts },
           address: facts.address || deal.address,
           streetViewUrl,
-          contacts: deal.contacts.some(c => c.role === 'owner') ? deal.contacts : [
-            ...deal.contacts,
+          contacts: contacts.some(c => c.role === 'owner') ? contacts : [
+            ...contacts,
             {
               id: crypto.randomUUID(), role: 'owner',
               name: facts.ownerName, company: '',
@@ -72,7 +74,7 @@ export default function ProfileTab({ deal, onUpdate }) {
   const f = deal.propertyFacts || {}
   const FACT_FIELDS = [
     ['PIN', f.pin], ['Lot Size', f.lotSize ? `${f.lotSize?.toLocaleString()} sf` : null],
-    ['Zoning', f.zoning], ['Current Use', f.currentUse],
+    ['Property Type', f.zoning], ['Neighborhood', f.currentUse],
     ['Assessed Value', f.assessedValue ? `$${f.assessedValue?.toLocaleString()}` : null],
     ['Tax Year', f.taxYear], ['Owner Name', f.ownerName],
     ['Owner Address', f.ownerAddress],

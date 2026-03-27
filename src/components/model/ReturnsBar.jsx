@@ -36,24 +36,21 @@ export default function ReturnsBar({ pinnedCells, onUnpin, onExportExcel, onExpo
       </div>
 
       <div className="flex gap-2 flex-wrap items-center">
-        {pinnedCells.map((pin, i) => {
-          const isKey = i < 3 // first 3 are the default IRR / EM / CoC pins
-          return (
-            <div key={pin.id}
-              className={`relative border rounded-lg px-3 py-1.5 text-center min-w-[100px] ${
-                isKey ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
-              }`}>
-              <div className="text-gray-500 text-xs">{pin.label}</div>
-              <div className={`font-bold text-sm ${isKey ? 'text-green-400' : 'text-white'}`}>
-                {formatPin(pin.label, pin.value)}
-              </div>
-              {i >= 3 && (
-                <button onClick={() => onUnpin(pin.id)}
-                  className="absolute -top-1 -right-1 text-gray-600 text-xs hover:text-red-400">✕</button>
-              )}
+        {pinnedCells.map((pin) => (
+          <div key={pin.id}
+            className={`relative border rounded-lg px-3 py-1.5 text-center min-w-[100px] ${
+              pin.isDefault ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
+            }`}>
+            <div className="text-gray-500 text-xs">{pin.label}</div>
+            <div className={`font-bold text-sm ${pin.isDefault ? 'text-green-400' : 'text-white'}`}>
+              {formatPin(pin.label, pin.value)}
             </div>
-          )
-        })}
+            {!pin.isDefault && (
+              <button onClick={() => onUnpin(pin.id)}
+                className="absolute -top-1 -right-1 text-gray-600 text-xs hover:text-red-400">✕</button>
+            )}
+          </div>
+        ))}
 
         {/* Add-pin hint */}
         <div className="border border-dashed border-gray-700 rounded-lg px-3 py-1.5 text-center min-w-[80px]">
