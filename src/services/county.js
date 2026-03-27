@@ -104,3 +104,15 @@ function normalizeParcelData(a, v, c, isComm) {
       : (c.char_yrblt ? parseInt(c.char_yrblt) : null),
   }
 }
+
+export async function reverseGeocode(lat, lng, token) {
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address&limit=1&access_token=${token}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Reverse geocode failed')
+  const data = await res.json()
+  const feature = data.features?.[0]
+  if (!feature) throw new Error('No address found at this location')
+  // Extract just the street address (house number + street name)
+  // Cook County LIKE query handles partial match — no city/state needed
+  return `${feature.address || ''} ${feature.text || ''}`.trim()
+}
