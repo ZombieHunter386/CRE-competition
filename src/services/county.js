@@ -44,8 +44,10 @@ export async function fetchParcelByPin(query) {
     ])
   } else {
     const escaped = trimmed.toUpperCase().replace(/'/g, "''")
+    // Use wildcard between parts so "217 WACKER" matches "217 S WACKER DR"
+    const pattern = escaped.split(/\s+/).join('%')
     addrRow = await socrata(ADDRESSES_API,
-      `upper(prop_address_full) like '%${escaped}%'`,
+      `upper(prop_address_full) like '${pattern}%'`,
       'pin,prop_address_full,prop_address_city_name,prop_address_state,prop_address_zipcode_1,owner_address_name,owner_address_full,owner_address_city_name,owner_address_state,owner_address_zipcode_1,year')
     if (!addrRow) throw new Error('No parcel found for that address.')
     pin = addrRow.pin
