@@ -108,7 +108,7 @@ function normalizeParcelData(a, v, c, isComm) {
 export async function reverseGeocode(lat, lng, token) {
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address&limit=1&access_token=${token}`
   const res = await fetch(url)
-  if (!res.ok) throw new Error('Reverse geocode failed')
+  if (!res.ok) throw new Error(`Reverse geocode failed: ${res.status}`)
   const data = await res.json()
   const feature = data.features?.[0]
   if (!feature) throw new Error('No address found at this location')
