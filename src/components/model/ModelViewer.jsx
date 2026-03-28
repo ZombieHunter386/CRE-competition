@@ -22,6 +22,7 @@ export default function ModelViewer({ modelData, onCellSelected }) {
     })
 
     return () => {
+      initialized.current = false
       try { window.luckysheet.destroy() } catch (_) {}
     }
   }, [modelData])
