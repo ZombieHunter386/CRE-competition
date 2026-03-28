@@ -45,8 +45,6 @@ export default function PipelineSummary() {
     { key: 'dealType', label: 'Type' },
     { key: 'irr', label: 'IRR' },
     { key: 'equityMultiple', label: 'Eq. Multiple' },
-    { key: 'noi', label: 'NOI' },
-    { key: 'totalDevCost', label: 'TDC' },
     { key: 'updatedAt', label: 'Updated' },
   ]
 
@@ -89,9 +87,7 @@ export default function PipelineSummary() {
                       <td className="px-3 py-2 text-gray-300 capitalize">{deal.dealType?.replace('_', ' ') || '—'}</td>
                       <td className="px-3 py-2 text-green-400 font-semibold">{(() => { const v = getPinnedValue(deal, 'irr') ?? o.leverIrr; return v != null ? `${(v * 100).toFixed(1)}%` : '—' })()}</td>
                       <td className="px-3 py-2 text-green-400 font-semibold">{(() => { const v = getPinnedValue(deal, 'multiple') ?? o.equityMultiple; return v != null ? `${Number(v).toFixed(2)}×` : '—' })()}</td>
-                      <td className="px-3 py-2 text-white">{o.noi ? `$${Math.round(o.noi).toLocaleString()}` : '—'}</td>
-                      <td className="px-3 py-2 text-white">{o.totalDevCost ? `$${(o.totalDevCost / 1e6).toFixed(1)}M` : '—'}</td>
-                      <td className="px-3 py-2 text-gray-400 text-xs">{deal.updatedAt?.slice(0, 10) || '—'}</td>
+<td className="px-3 py-2 text-gray-400 text-xs">{deal.updatedAt?.slice(0, 10) || '—'}</td>
                       <td className="px-3 py-2">
                         <select className="bg-transparent text-xs border border-gray-700 rounded px-1 py-0.5"
                           onClick={e => e.stopPropagation()}

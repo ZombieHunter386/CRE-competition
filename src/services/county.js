@@ -1,3 +1,25 @@
+// =============================================================================
+// PORTING TO A DIFFERENT COUNTY
+// =============================================================================
+// This file is hardcoded to Cook County, IL. To support another county:
+//
+// 1. URLS (below) — replace the 5 Socrata dataset endpoints with the target
+//    county's equivalents. Most major US counties publish parcel data on
+//    Socrata (data.cityofchicago.org, data.lacounty.gov, etc.). Non-Socrata
+//    counties will also require rewriting the socrata() helper function.
+//
+// 2. FIELD NAMES — update the $select strings and $where filters inside
+//    fetchParcelByPin() to match the target county's column names. Each
+//    county names fields differently (e.g. "parcel_id" vs "pin").
+//
+// 3. normalizeParcelData() — remap the raw field names to the standard output
+//    shape. The output shape itself ({ pin, address, lotSize, zoning, ... })
+//    must stay the same — the rest of the app depends on it.
+//
+// 4. PIN FORMAT — update isPin(), normalizePin(), and dashedPin() if the
+//    target county uses a different parcel identifier format.
+// =============================================================================
+
 const ADDRESSES_API   = 'https://datacatalog.cookcountyil.gov/resource/3723-97qp.json'
 const ASSESSED_API    = 'https://datacatalog.cookcountyil.gov/resource/uzyt-m557.json'
 const RES_CHARS_API   = 'https://datacatalog.cookcountyil.gov/resource/x54s-btds.json'

@@ -27,10 +27,6 @@ export default function SettingsPage() {
         { key: 'hurdleEquityMultiple', label: 'Target Equity Multiple', type: 'number' },
       ]
     },
-    {
-      title: '👤 Profile',
-      fields: [{ key: 'userName', label: 'Your Name (for broker emails)' }]
-    },
   ]
 
   return (
