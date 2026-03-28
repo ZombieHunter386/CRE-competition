@@ -15,7 +15,11 @@ export default function ModelViewer({ modelData, onCellSelected }) {
       container: containerRef.current.id,
       data: modelData.sheets,
       hook: {
-        cellSelected(r, c, v) {
+        cellMousedown(_, cellBounds, sheetData) {
+          const r = cellBounds?.r
+          const c = cellBounds?.c
+          if (r == null || c == null || r < 0 || c < 0) return
+          const v = sheetData?.data?.[r]?.[c]
           onCellSelected?.({ r, c, v, sheetName: window.luckysheet.getSheetName() })
         },
       },
