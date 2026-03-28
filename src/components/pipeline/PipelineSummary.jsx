@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { getDeals, deleteDeal } from '../../store/deals'
 import { exportPipelineToExcel } from '../../utils/export'
 
+function getPinnedValue(deal, labelFragment) {
+  const pins = deal.model?.pinnedCells || []
+  return pins.find(p => p.label.toLowerCase().includes(labelFragment.toLowerCase()))?.value ?? null
+}
+
 const STATUS_OPTIONS = ['Tracking', 'Active', 'Pass']
 
 export default function PipelineSummary() {
@@ -21,8 +26,8 @@ export default function PipelineSummary() {
   function getVal(deal, k) {
     const map = {
       address: deal.address, dealType: deal.dealType,
-      irr: deal.model?.outputs?.leverIrr,
-      equityMultiple: deal.model?.outputs?.equityMultiple,
+      irr: getPinnedValue(deal, 'irr') ?? deal.model?.outputs?.leverIrr,
+      equityMultiple: getPinnedValue(deal, 'multiple') ?? deal.model?.outputs?.equityMultiple,
       noi: deal.model?.outputs?.noi,
       totalDevCost: deal.model?.outputs?.totalDevCost,
       updatedAt: deal.updatedAt,
@@ -82,8 +87,8 @@ export default function PipelineSummary() {
                       onClick={() => navigate(`/deal/${deal.id}`)}>
                       <td className="px-3 py-2 text-white">{deal.name || deal.address || 'Untitled'}</td>
                       <td className="px-3 py-2 text-gray-300 capitalize">{deal.dealType?.replace('_', ' ') || '—'}</td>
-                      <td className="px-3 py-2 text-green-400 font-semibold">{o.leverIrr ? `${o.leverIrr.toFixed(1)}%` : '—'}</td>
-                      <td className="px-3 py-2 text-green-400 font-semibold">{o.equityMultiple ? `${o.equityMultiple.toFixed(2)}×` : '—'}</td>
+                      <td className="px-3 py-2 text-green-400 font-semibold">{(() => { const v = getPinnedValue(deal, 'irr') ?? o.leverIrr; return v != null ? `${(v * 100).toFixed(1)}%` : '—' })()}</td>
+                      <td className="px-3 py-2 text-green-400 font-semibold">{(() => { const v = getPinnedValue(deal, 'multiple') ?? o.equityMultiple; return v != null ? `${Number(v).toFixed(2)}×` : '—' })()}</td>
                       <td className="px-3 py-2 text-white">{o.noi ? `$${Math.round(o.noi).toLocaleString()}` : '—'}</td>
                       <td className="px-3 py-2 text-white">{o.totalDevCost ? `$${(o.totalDevCost / 1e6).toFixed(1)}M` : '—'}</td>
                       <td className="px-3 py-2 text-gray-400 text-xs">{deal.updatedAt?.slice(0, 10) || '—'}</td>
