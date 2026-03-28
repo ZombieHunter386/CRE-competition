@@ -52,26 +52,29 @@ export default function ModelTab({ deal, onUpdate }) {
 
   function handleCellSelected(cellInfo) {
     setSelectedCell(cellInfo)
-    // During guided setup, each cell click auto-pins the next required metric
+  }
+
+  function confirmGuidedPin() {
+    if (!selectedCell) return
     const step = setupStep
-    if (step < 3) {
-      const newPin = {
-        id:        crypto.randomUUID(),
-        label:     GUIDED_LABELS[step],
-        sheetName: cellInfo.sheetName,
-        row:       cellInfo.r,
-        col:       cellInfo.c,
-        value:     cellInfo.v?.v ?? null,
-        isGuided:  true,
-      }
-      onUpdate({
-        model: {
-          ...deal.model,
-          pinnedCells: [...(deal.model?.pinnedCells || []), newPin],
-          setupStep:   step + 1,
-        },
-      })
+    if (step >= 3) return
+    const newPin = {
+      id:        crypto.randomUUID(),
+      label:     GUIDED_LABELS[step],
+      sheetName: selectedCell.sheetName,
+      row:       selectedCell.r,
+      col:       selectedCell.c,
+      value:     selectedCell.v?.v ?? null,
+      isGuided:  true,
     }
+    onUpdate({
+      model: {
+        ...deal.model,
+        pinnedCells: [...(deal.model?.pinnedCells || []), newPin],
+        setupStep:   step + 1,
+      },
+    })
+    setSelectedCell(null)
   }
 
   function pinCell() {
@@ -155,7 +158,19 @@ export default function ModelTab({ deal, onUpdate }) {
             <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded shrink-0">
               {setupStep + 1}/3
             </span>
-            <span className="text-blue-300 text-sm">{GUIDED_BANNERS[setupStep]}</span>
+            <span className="text-blue-300 text-sm flex-1">{GUIDED_BANNERS[setupStep]}</span>
+            {selectedCell && (
+              <>
+                <span className="text-blue-200 text-xs font-mono bg-blue-900 px-2 py-0.5 rounded shrink-0">
+                  {String.fromCharCode(65 + selectedCell.c)}{selectedCell.r + 1}
+                </span>
+                <button
+                  onClick={confirmGuidedPin}
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded shrink-0 transition-colors">
+                  Select
+                </button>
+              </>
+            )}
           </div>
         )}
 
