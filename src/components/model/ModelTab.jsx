@@ -1,72 +1,77 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ReturnsBar from './ReturnsBar'
 import ModelViewer from './ModelViewer'
-import ModelUpload from './ModelUpload'
 import { xlsxBufferToLuckysheetData } from '../../utils/xlsxParse'
 import { exportToExcel, exportToPdf } from '../../utils/export'
 
-// Summary sheet: U14=IRR, U15=Equity Multiple, U16=Avg Cash on Cash
-// U = col 20 (0-indexed), rows 13/14/15 (0-indexed)
-const DEFAULT_PINS = [
-  { label: 'IRR',                sheetName: 'Summary', row: 13, col: 20 },
-  { label: 'Equity Multiple',    sheetName: 'Summary', row: 14, col: 20 },
-  { label: 'Avg Cash on Cash',   sheetName: 'Summary', row: 15, col: 20 },
+// In-memory store: raw ArrayBuffer keyed by deal ID
+// Not persisted — user must re-upload after page refresh
+const rawBufferStore = new Map()
+
+const GUIDED_LABELS  = ['IRR', 'Equity Multiple', 'Avg Cash on Cash']
+const GUIDED_BANNERS = [
+  'Step 1 of 3 — Click the cell in your model that contains your IRR',
+  'Step 2 of 3 — Click the cell containing your Equity Multiple',
+  'Step 3 of 3 — Click the cell containing your Avg Cash on Cash',
 ]
 
-function extractPinnedValues(luckysheetData, pins) {
-  if (!luckysheetData?.sheets) return pins
-  return pins.map(p => {
-    const sheet = luckysheetData.sheets.find(s => s.name?.toLowerCase() === p.sheetName?.toLowerCase())
-    if (!sheet) return { ...p, value: null }
-    // getAllSheets() returns data[r][c] (2D sparse array)
-    if (sheet.data) {
-      const cell = sheet.data[p.row]?.[p.col]
-      return { ...p, value: cell?.v ?? null }
-    }
-    // xlsxBufferToLuckysheetData returns celldata [{r, c, v: {v, f}}]
-    const cell = sheet.celldata?.find(c => c.r === p.row && c.c === p.col)
-    return { ...p, value: cell?.v?.v ?? null }
-  })
-}
-
 export default function ModelTab({ deal, onUpdate }) {
-  const [modelSource, setModelSource] = useState(
-    deal.model?.luckysheetData?.source ?? null
-  )
-  const [loading, setLoading] = useState(false)
-  const [selectedCell, setSelectedCell] = useState(null)
+  const fileRef = useRef()
+  const [luckysheetData, setLuckysheetData] = useState(null)
+  const [viewerKey, setViewerKey]           = useState(0)
+  const [selectedCell, setSelectedCell]     = useState(null)
 
-  const modelData   = deal.model?.luckysheetData
-  const pinnedCells = deal.model?.pinnedCells || []
+  const pinnedCells   = deal.model?.pinnedCells   || []
+  const setupStep     = deal.model?.setupStep     ?? 0
+  const uploadedModel = deal.model?.uploadedModel ?? null
 
-  async function loadDefault() {
-    setLoading(true)
-    try {
-      const res = await fetch('/models/default-model.xlsx')
-      if (!res.ok) throw new Error(`Template not found (${res.status})`)
-      const buf = await res.arrayBuffer()
-      const data = { ...xlsxBufferToLuckysheetData(buf, 'default-model.xlsx'), source: 'default' }
-      const autoPins = extractPinnedValues(data,
-        DEFAULT_PINS.map(p => ({ ...p, id: crypto.randomUUID(), isDefault: true }))
-      )
+  function handleFile(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    // Reset input so the same file can be re-uploaded
+    e.target.value = ''
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const buf  = ev.target.result
+      const data = xlsxBufferToLuckysheetData(buf, file.name)
+      rawBufferStore.set(deal.id, buf)
+      setLuckysheetData(data)
+      setViewerKey(k => k + 1)
+      setSelectedCell(null)
       onUpdate({
         model: {
           ...deal.model,
-          luckysheetData: data,
-          uploadedModel: data.fileName,
-          pinnedCells: autoPins,
-        }
+          uploadedModel: file.name,
+          pinnedCells:   [],
+          setupStep:     0,
+        },
       })
-      setModelSource('default')
-    } catch (e) {
-      alert(`Could not load default template: ${e.message}`)
-    } finally {
-      setLoading(false)
     }
+    reader.readAsArrayBuffer(file)
   }
 
   function handleCellSelected(cellInfo) {
     setSelectedCell(cellInfo)
+    // During guided setup, each cell click auto-pins the next required metric
+    const step = deal.model?.setupStep ?? 0
+    if (step < 3) {
+      const newPin = {
+        id:        crypto.randomUUID(),
+        label:     GUIDED_LABELS[step],
+        sheetName: cellInfo.sheetName,
+        row:       cellInfo.r,
+        col:       cellInfo.c,
+        value:     cellInfo.v?.v ?? null,
+        isGuided:  true,
+      }
+      onUpdate({
+        model: {
+          ...deal.model,
+          pinnedCells: [...(deal.model?.pinnedCells || []), newPin],
+          setupStep:   step + 1,
+        },
+      })
+    }
   }
 
   function pinCell() {
@@ -74,10 +79,13 @@ export default function ModelTab({ deal, onUpdate }) {
     const label = prompt('Label for this pinned metric:')
     if (!label) return
     const newPin = {
-      id: crypto.randomUUID(), label,
+      id:        crypto.randomUUID(),
+      label,
       sheetName: selectedCell.sheetName,
-      row: selectedCell.r, col: selectedCell.c,
-      value: selectedCell.v?.v,
+      row:       selectedCell.r,
+      col:       selectedCell.c,
+      value:     selectedCell.v?.v ?? null,
+      isGuided:  false,
     }
     onUpdate({ model: { ...deal.model, pinnedCells: [...pinnedCells, newPin] } })
   }
@@ -86,9 +94,22 @@ export default function ModelTab({ deal, onUpdate }) {
     onUpdate({ model: { ...deal.model, pinnedCells: pinnedCells.filter(p => p.id !== id) } })
   }
 
+  function downloadModel() {
+    const buf = rawBufferStore.get(deal.id)
+    if (!buf) return
+    const blob = new Blob([buf], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
+    a.download = uploadedModel || 'model.xlsx'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="p-4">
-      {/* Returns bar */}
       <ReturnsBar
         pinnedCells={pinnedCells}
         onUnpin={unpinCell}
@@ -96,77 +117,101 @@ export default function ModelTab({ deal, onUpdate }) {
         onExportPdf={() => exportToPdf(deal)}
       />
 
-      {/* Model section */}
       <div className="border border-gray-700 rounded-lg overflow-hidden">
-        {/* Model toolbar */}
+        {/* Toolbar */}
         <div className="bg-[#161b22] px-4 py-2 flex items-center justify-between border-b border-gray-700">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="text-white font-bold text-sm">Model</span>
-            {/* 2-source selector */}
-            <div className="flex bg-[#0d1117] border border-gray-700 rounded overflow-hidden text-xs">
+            {uploadedModel && (
+              <span className="text-gray-500 text-xs truncate max-w-[200px]">{uploadedModel}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {luckysheetData && (
               <button
-                onClick={loadDefault}
-                disabled={loading}
-                className={`px-3 py-1.5 transition-colors disabled:opacity-50 ${modelSource === 'default' ? 'bg-blue-600 text-white font-semibold' : 'text-gray-400 hover:text-gray-200'}`}>
-                📊 Default Model
+                onClick={downloadModel}
+                className="text-gray-400 hover:text-gray-200 text-xs px-3 py-1.5 border border-gray-700 rounded transition-colors">
+                ⬇ Download .xlsx
               </button>
-              <button
-                onClick={() => setModelSource('upload')}
-                className={`px-3 py-1.5 transition-colors ${modelSource === 'upload' ? 'bg-blue-600 text-white font-semibold' : 'text-gray-400 hover:text-gray-200'}`}>
-                📁 Upload My Own
-              </button>
-            </div>
-            {loading && <span className="text-gray-400 text-xs">Loading...</span>}
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".xlsx,.xls"
+              className="hidden"
+              onChange={handleFile}
+            />
+            <button
+              onClick={() => fileRef.current.click()}
+              className="text-gray-400 hover:text-gray-200 text-xs px-3 py-1.5 border border-gray-700 rounded transition-colors">
+              {luckysheetData ? '🔄 Re-upload' : '📁 Upload Model'}
+            </button>
           </div>
         </div>
 
-        {/* Upload panel — only when Upload My Own is selected */}
-        {modelSource === 'upload' && (
-          <ModelUpload onModelLoaded={(data) => {
-            const uploadData = { ...data, source: 'upload' }
-            onUpdate({ model: { ...deal.model, luckysheetData: uploadData, uploadedModel: uploadData.fileName, pinnedCells: [] } })
-            setModelSource('upload')
-          }} />
+        {/* Guided setup banner — shown until all 3 metrics are pinned */}
+        {luckysheetData && setupStep < 3 && (
+          <div className="bg-blue-950 border-b border-blue-700 px-4 py-2.5 flex items-center gap-3">
+            <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded shrink-0">
+              {setupStep + 1}/3
+            </span>
+            <span className="text-blue-300 text-sm">{GUIDED_BANNERS[setupStep]}</span>
+          </div>
         )}
 
-        {/* Formula bar */}
-        <div className="bg-[#161b22] border-b border-gray-700 px-3 py-1.5 flex items-center gap-2 text-xs">
-          <span className="bg-[#0d1117] border border-gray-600 rounded px-2 py-0.5 text-gray-400 font-mono min-w-[40px] text-center">
-            {selectedCell ? `${String.fromCharCode(65 + selectedCell.c)}${selectedCell.r + 1}` : ''}
-          </span>
-          <span className="text-gray-500">fx</span>
-          <span className="text-blue-400 font-mono flex-1">
-            {selectedCell?.v?.f || selectedCell?.v?.v || ''}
-          </span>
-          {selectedCell && (
-            <button onClick={pinCell}
-              className="bg-blue-600 text-white px-3 py-0.5 rounded text-xs font-semibold flex-shrink-0">
-              📌 Pin to Returns Bar
-            </button>
-          )}
-        </div>
+        {/* Formula bar — only visible after guided setup is complete */}
+        {luckysheetData && setupStep === 3 && (
+          <div className="bg-[#161b22] border-b border-gray-700 px-3 py-1.5 flex items-center gap-2 text-xs">
+            <span className="bg-[#0d1117] border border-gray-600 rounded px-2 py-0.5 text-gray-400 font-mono min-w-[40px] text-center">
+              {selectedCell
+                ? `${String.fromCharCode(65 + selectedCell.c)}${selectedCell.r + 1}`
+                : ''}
+            </span>
+            <span className="text-gray-500">fx</span>
+            <span className="text-blue-400 font-mono flex-1">
+              {selectedCell?.v?.f || selectedCell?.v?.v || ''}
+            </span>
+            {selectedCell && (
+              <button
+                onClick={pinCell}
+                className="bg-blue-600 text-white px-3 py-0.5 rounded text-xs font-semibold shrink-0">
+                📌 Pin to Returns Bar
+              </button>
+            )}
+          </div>
+        )}
 
-        {/* Model viewer or placeholder */}
-        {modelData
-          ? <ModelViewer
-              modelData={modelData}
-              onCellSelected={handleCellSelected}
-              onCellUpdated={(allSheets) => {
-                const updatedData = { ...modelData, sheets: allSheets }
-                const refreshed   = extractPinnedValues(updatedData, pinnedCells)
-                onUpdate({ model: { ...deal.model, luckysheetData: updatedData, pinnedCells: refreshed } })
-              }}
-            />
-          : <div className="h-48 flex items-center justify-center text-gray-500 bg-[#0d1117] text-sm">
-              Select a model template above or upload your own to get started.
-            </div>
-        }
+        {/* Content area */}
+        {luckysheetData ? (
+          <ModelViewer
+            key={viewerKey}
+            modelData={luckysheetData}
+            onCellSelected={handleCellSelected}
+          />
+        ) : (
+          <div className="h-48 flex flex-col items-center justify-center gap-2 bg-[#0d1117] text-sm">
+            {uploadedModel ? (
+              <>
+                <span className="text-gray-500">
+                  Last model: <span className="text-gray-300">{uploadedModel}</span>
+                </span>
+                <span className="text-gray-600 text-xs">Upload your model to continue</span>
+              </>
+            ) : (
+              <span className="text-gray-500">Upload your .xlsx model to get started.</span>
+            )}
+          </div>
+        )}
 
         {/* Legend */}
         <div className="bg-[#161b22] border-t border-gray-700 px-4 py-2 flex gap-5 text-xs text-gray-500">
-          <span><span className="text-blue-400 font-bold">■</span> Blue = input (editable)</span>
+          <span><span className="text-blue-400 font-bold">■</span> Blue = input</span>
           <span><span className="text-white font-bold">■</span> Black = formula</span>
-          <span className="ml-auto text-blue-400 font-semibold">⟳ Edit any cell → returns bar updates instantly</span>
+          {setupStep === 3 && (
+            <span className="ml-auto text-blue-400 font-semibold">
+              ✦ Highlight any cell → Pin to Returns Bar
+            </span>
+          )}
         </div>
       </div>
     </div>
