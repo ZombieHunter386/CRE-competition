@@ -1,6 +1,5 @@
 import { getSettings } from '../../store/settings'
 
-// Format a raw cell value based on the label
 function formatPin(label, value) {
   if (value == null || isNaN(value)) return '—'
   const l = label.toLowerCase()
@@ -39,26 +38,26 @@ export default function ReturnsBar({ pinnedCells, onUnpin, onExportExcel, onExpo
         {pinnedCells.map((pin) => (
           <div key={pin.id}
             className={`relative border rounded-lg px-3 py-1.5 text-center min-w-[100px] ${
-              pin.isDefault ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
+              pin.isGuided ? 'bg-green-950 border-green-600' : 'bg-[#0d1117] border-gray-700'
             }`}>
             <div className="text-gray-500 text-xs">{pin.label}</div>
-            <div className={`font-bold text-sm ${pin.isDefault ? 'text-green-400' : 'text-white'}`}>
+            <div className={`font-bold text-sm ${pin.isGuided ? 'text-green-400' : 'text-white'}`}>
               {formatPin(pin.label, pin.value)}
             </div>
-            {!pin.isDefault && (
+            {!pin.isGuided && (
               <button onClick={() => onUnpin(pin.id)}
                 className="absolute -top-1 -right-1 text-gray-600 text-xs hover:text-red-400">✕</button>
             )}
           </div>
         ))}
 
-        {/* Add-pin hint */}
-        <div className="border border-dashed border-gray-700 rounded-lg px-3 py-1.5 text-center min-w-[80px]">
-          <div className="text-gray-600 text-xs">+ Pin a cell</div>
-          <div className="text-gray-700 text-xs">highlight in model</div>
-        </div>
+        {pinnedCells.length === 0 && (
+          <div className="border border-dashed border-gray-700 rounded-lg px-3 py-1.5 text-center min-w-[80px]">
+            <div className="text-gray-600 text-xs">+ Pin a cell</div>
+            <div className="text-gray-700 text-xs">highlight in model</div>
+          </div>
+        )}
 
-        {/* Pencils indicator */}
         <div className="ml-auto flex items-center gap-2 pl-3 border-l border-gray-700">
           <span>{pencils ? '✅' : '❌'}</span>
           <span className={`font-bold text-sm ${pencils ? 'text-green-400' : 'text-red-400'}`}>
