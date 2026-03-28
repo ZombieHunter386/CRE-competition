@@ -14,6 +14,11 @@ const DEAL_TYPE_COLORS = {
   unknown: '#aaaaaa',
 }
 
+const MAP_STYLES = {
+  dark: 'mapbox://styles/mapbox/dark-v11',
+  satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
+}
+
 export default function MapView() {
   const mapContainer = useRef(null)
   const map = useRef(null)
@@ -21,8 +26,15 @@ export default function MapView() {
   const [selectedDeal, setSelectedDeal] = useState(null)
   const [deals, setDeals] = useState([])
   const [pendingPin, setPendingPin] = useState(null)
+  const [mapStyle, setMapStyle] = useState('dark')
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Keep a ref so the style.load callback always has the latest deals/pendingPin
+  const dealsRef = useRef([])
+  const pendingPinRef = useRef(null)
+  useEffect(() => { dealsRef.current = deals }, [deals])
+  useEffect(() => { pendingPinRef.current = pendingPin }, [pendingPin])
 
   // Check token on every render (cheap localStorage read)
   const settings = getSettings()
@@ -84,27 +96,11 @@ export default function MapView() {
     }
   }, [pendingPin])
 
-  function handleCreateDeal() {
-    if (!pendingPin) return
-    const deal = createEmptyDeal(pendingPin.lat, pendingPin.lng)
-    saveDeal(deal)
-    setDeals(getDeals())
-    setPendingPin(null)
-    navigate(`/deal/${deal.id}`)
-  }
-
-  function handleCancelPin() {
-    setPendingPin(null)
-  }
-
-  // Add/update markers when deals change
-  useEffect(() => {
-    if (!map.current) return
-    // Clear old markers
+  // Helper: render all deal markers onto the current map instance
+  function renderDealMarkers(dealList) {
     Object.values(markersRef.current).forEach(m => m.remove())
     markersRef.current = {}
-
-    deals.forEach(deal => {
+    dealList.forEach(deal => {
       const el = document.createElement('div')
       el.style.cssText = `
         width: 14px; height: 14px; border-radius: 50%;
@@ -121,6 +117,57 @@ export default function MapView() {
       })
       markersRef.current[deal.id] = marker
     })
+  }
+
+  // Switch map style without re-initializing the map
+  useEffect(() => {
+    if (!map.current) return
+    map.current.setStyle(MAP_STYLES[mapStyle])
+    // After setStyle, Mapbox fires 'style.load'; re-add markers then
+    const onStyleLoad = () => {
+      renderDealMarkers(dealsRef.current)
+      // Re-add pending pin marker if one exists
+      if (pendingPinRef.current) {
+        if (pendingMarkerRef.current) {
+          pendingMarkerRef.current.remove()
+          pendingMarkerRef.current = null
+        }
+        const el = document.createElement('div')
+        el.style.cssText = `
+          width: 20px; height: 20px; border-radius: 50%;
+          background: #ff6b35; border: 3px solid white;
+          cursor: pointer; box-shadow: 0 0 8px rgba(255,107,53,0.6);
+        `
+        pendingMarkerRef.current = new mapboxgl.Marker(el)
+          .setLngLat([pendingPinRef.current.lng, pendingPinRef.current.lat])
+          .addTo(map.current)
+      }
+    }
+    map.current.once('style.load', onStyleLoad)
+    return () => {
+      map.current?.off('style.load', onStyleLoad)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapStyle])
+
+  function handleCreateDeal() {
+    if (!pendingPin) return
+    const deal = createEmptyDeal(pendingPin.lat, pendingPin.lng)
+    saveDeal(deal)
+    setDeals(getDeals())
+    setPendingPin(null)
+    navigate(`/deal/${deal.id}`)
+  }
+
+  function handleCancelPin() {
+    setPendingPin(null)
+  }
+
+  // Add/update markers when deals change
+  useEffect(() => {
+    if (!map.current) return
+    renderDealMarkers(deals)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deals])
 
   // No token — show setup prompt
@@ -152,6 +199,39 @@ export default function MapView() {
         map.current?.flyTo({ center: [lng, lat], zoom: 16 })
       }} />
       <div ref={mapContainer} className="w-full h-full" />
+
+      {/* Satellite / Dark style toggle */}
+      <button
+        onClick={() => setMapStyle(s => s === 'dark' ? 'satellite' : 'dark')}
+        style={{
+          position: 'absolute',
+          top: '110px',
+          right: '10px',
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '8px 12px',
+          background: '#161b22',
+          border: '1px solid #30363d',
+          borderRadius: '6px',
+          color: '#e6edf3',
+          fontSize: '13px',
+          fontWeight: 600,
+          cursor: 'pointer',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+          transition: 'background 0.15s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = '#21262d'}
+        onMouseLeave={e => e.currentTarget.style.background = '#161b22'}
+        title={mapStyle === 'dark' ? 'Switch to Satellite view' : 'Switch to Dark view'}
+      >
+        {mapStyle === 'dark' ? (
+          <><span>🛰</span> Satellite</>
+        ) : (
+          <><span>🗺</span> Map</>
+        )}
+      </button>
 
       {/* Pending pin confirmation */}
       {pendingPin && !selectedDeal && (
