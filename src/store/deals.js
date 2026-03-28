@@ -51,6 +51,7 @@ export function createEmptyDeal(lat, lng) {
       luckysheetData: null,
       pinnedCells: [],
       uploadedModel: null,
+      setupStep: 0,
     },
     conceptRenderUrl: null,
     streetViewUrl: null,

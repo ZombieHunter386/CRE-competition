@@ -53,7 +53,7 @@ export default function ModelTab({ deal, onUpdate }) {
   function handleCellSelected(cellInfo) {
     setSelectedCell(cellInfo)
     // During guided setup, each cell click auto-pins the next required metric
-    const step = deal.model?.setupStep ?? 0
+    const step = setupStep
     if (step < 3) {
       const newPin = {
         id:        crypto.randomUUID(),
@@ -204,15 +204,17 @@ export default function ModelTab({ deal, onUpdate }) {
         )}
 
         {/* Legend */}
-        <div className="bg-[#161b22] border-t border-gray-700 px-4 py-2 flex gap-5 text-xs text-gray-500">
-          <span><span className="text-blue-400 font-bold">■</span> Blue = input</span>
-          <span><span className="text-white font-bold">■</span> Black = formula</span>
-          {setupStep === 3 && (
-            <span className="ml-auto text-blue-400 font-semibold">
-              ✦ Highlight any cell → Pin to Returns Bar
-            </span>
-          )}
-        </div>
+        {luckysheetData && (
+          <div className="bg-[#161b22] border-t border-gray-700 px-4 py-2 flex gap-5 text-xs text-gray-500">
+            <span><span className="text-blue-400 font-bold">■</span> Blue = input</span>
+            <span><span className="text-white font-bold">■</span> Black = formula</span>
+            {setupStep === 3 && (
+              <span className="ml-auto text-blue-400 font-semibold">
+                ✦ Highlight any cell → Pin to Returns Bar
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
