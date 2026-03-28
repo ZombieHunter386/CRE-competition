@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react'
 import { fetchParcelByPin, reverseGeocode } from '../../services/county'
 import { getStreetViewUrl } from '../../services/streetview'
-import { generateConceptRender } from '../../services/gemini-image'
 import { getSettings } from '../../store/settings'
 
 export default function ProfileTab({ deal, onUpdate }) {
   const [pin, setPin] = useState(deal.propertyFacts?.pin || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [renderLoading, setRenderLoading] = useState(false)
-  const [imageLoading, setImageLoading] = useState(false)
 
   useEffect(() => {
     if (!deal.lat || !deal.lng || deal.propertyFacts?.pin) return
@@ -85,55 +82,13 @@ export default function ProfileTab({ deal, onUpdate }) {
     <div className="p-4 grid grid-cols-2 gap-4">
       {/* Left column */}
       <div className="flex flex-col gap-4">
-        {/* Images */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[#161b22] border border-gray-700 rounded-lg overflow-hidden">
-            {deal.streetViewUrl
-              ? <iframe src={deal.streetViewUrl} title="Street View" className="w-full h-36 border-0" allowFullScreen />
-              : <div className="h-36 flex items-center justify-center text-gray-600">Street View</div>}
-            <div className="text-center text-gray-400 text-xs py-1">Street View</div>
-          </div>
-          <div className="bg-[#161b22] border border-purple-700 rounded-lg overflow-hidden">
-            {deal.conceptRenderUrl
-              ? <>
-                  {imageLoading && <div className="h-36 flex items-center justify-center text-purple-400 text-xs animate-pulse">Generating image...</div>}
-                  <img
-                    src={deal.conceptRenderUrl}
-                    alt="Concept Render"
-                    className={`w-full h-36 object-cover ${imageLoading ? 'hidden' : ''}`}
-                    onLoad={() => setImageLoading(false)}
-                    onError={() => setImageLoading(false)}
-                  />
-                </>
-              : <div className="h-36 flex items-center justify-center text-gray-600">AI Render</div>}
-            <div className="text-center text-purple-400 text-xs py-1">AI Concept Render</div>
-          </div>
+        {/* Street View */}
+        <div className="bg-[#161b22] border border-gray-700 rounded-lg overflow-hidden">
+          {deal.streetViewUrl
+            ? <iframe src={deal.streetViewUrl} title="Street View" className="w-full h-36 border-0" allowFullScreen />
+            : <div className="h-36 flex items-center justify-center text-gray-600">Street View</div>}
+          <div className="text-center text-gray-400 text-xs py-1">Street View</div>
         </div>
-
-        <button
-          onClick={async () => {
-            setRenderLoading(true)
-            setError(null)
-            try {
-              const result = await generateConceptRender({
-                dealType: deal.dealType || 'mixed_use',
-                description: deal.description,
-                propertyFacts: deal.propertyFacts || {},
-                municipality: deal.address,
-              })
-              setImageLoading(true)
-              onUpdate({ conceptRenderUrl: result.url })
-            } catch (e) {
-              setError(`Render failed: ${e.message}`)
-            } finally {
-              setRenderLoading(false)
-            }
-          }}
-          disabled={renderLoading}
-          className="bg-purple-800 border border-purple-500 text-purple-200 text-sm px-3 py-1.5 rounded mt-2 w-full disabled:opacity-50"
-        >
-          {renderLoading ? '🤖 Generating render...' : '🤖 Generate AI Concept Render'}
-        </button>
 
         {/* Description */}
         <div className="bg-[#161b22] border border-gray-700 rounded-lg p-3">

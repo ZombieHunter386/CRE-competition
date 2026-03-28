@@ -3,7 +3,7 @@ const ROLE_ICONS = {
   attorney: '⚖️', contractor: '🏗️', custom: '👤',
 }
 
-export default function ContactCard({ contact, onEdit, onDelete, onDraftEmail }) {
+export default function ContactCard({ contact, onEdit, onDelete }) {
   return (
     <div className="bg-[#161b22] border border-gray-700 rounded-lg p-3">
       <div className="flex items-start justify-between">
@@ -41,8 +41,7 @@ export default function ContactCard({ contact, onEdit, onDelete, onDraftEmail })
           </div>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          <button onClick={() => onDraftEmail(contact)} className="bg-green-900 border border-green-500 text-green-400 text-xs px-2 py-1 rounded">📧 Draft Email</button>
-          <button onClick={() => onEdit(contact)} className="bg-blue-900 border border-blue-500 text-blue-400 text-xs px-2 py-1 rounded">✏️ Edit</button>
+<button onClick={() => onEdit(contact)} className="bg-blue-900 border border-blue-500 text-blue-400 text-xs px-2 py-1 rounded">✏️ Edit</button>
           <button onClick={() => onDelete(contact.id)} className="text-gray-600 text-xs px-1">✕</button>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import ContactCard from './ContactCard'
 import AddContactModal from './AddContactModal'
-import BrokerEmailModal from '../model/BrokerEmailModal'
 
 const ROLE_CHIPS = [
   { role: 'listing_broker', label: '🤝 Broker' },
@@ -13,7 +12,6 @@ const ROLE_CHIPS = [
 export default function ContactsTab({ deal, onUpdate }) {
   const [editingContact, setEditingContact] = useState(null)
   const [addingRole, setAddingRole] = useState(null)
-  const [emailContact, setEmailContact] = useState(null)
 
   function deleteContact(id) {
     onUpdate({ contacts: deal.contacts.filter(c => c.id !== id) })
@@ -36,7 +34,6 @@ export default function ContactsTab({ deal, onUpdate }) {
           contact={c}
           onEdit={setEditingContact}
           onDelete={deleteContact}
-          onDraftEmail={setEmailContact}
         />
       ))}
 
@@ -53,16 +50,7 @@ export default function ContactsTab({ deal, onUpdate }) {
         </div>
       </div>
 
-      {/* Email hint */}
-      <div className="bg-green-950 border border-green-700 rounded-lg p-3 flex items-center gap-3 text-sm">
-        <span className="text-xl">📧</span>
-        <div>
-          <strong className="text-green-400">Draft Email with Claude</strong>
-          <div className="text-gray-400 text-xs mt-1">Click "Draft Email" on any contact — Claude uses their role and deal details to write tailored outreach.</div>
-        </div>
-      </div>
-
-      {(editingContact || addingRole) && (
+{(editingContact || addingRole) && (
         <AddContactModal
           contact={editingContact}
           defaultRole={addingRole}
@@ -71,13 +59,6 @@ export default function ContactsTab({ deal, onUpdate }) {
         />
       )}
 
-      {emailContact && (
-        <BrokerEmailModal
-          contact={emailContact}
-          deal={deal}
-          onClose={() => setEmailContact(null)}
-        />
-      )}
     </div>
   )
 }

@@ -18,7 +18,6 @@ export default function SettingsPage() {
       title: '🔑 API Keys',
       fields: [
         { key: 'mapboxToken', label: 'Mapbox Token', placeholder: 'pk.eyJ1...' },
-        { key: 'geminiApiKey', label: 'Gemini API Key (Image Generation)', placeholder: 'AIza...' },
       ]
     },
     {

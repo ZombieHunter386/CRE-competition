@@ -3,7 +3,6 @@ const KEY = 'sitestack_settings'
 const DEFAULTS = {
   mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN || '',
   openaiApiKey: '',
-  geminiApiKey: '',
   userName: '',
   hurdleIrr: 12,
   hurdleEquityMultiple: 1.75,
