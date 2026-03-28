@@ -3,8 +3,10 @@ import { LUCKYSHEET_BASE_CONFIG } from '../../utils/luckysheetConfig'
 import '../../styles/model.css'
 
 export default function ModelViewer({ modelData, onCellSelected }) {
-  const containerRef = useRef(null)
-  const initialized  = useRef(false)
+  const containerRef        = useRef(null)
+  const initialized         = useRef(false)
+  const onCellSelectedRef   = useRef(onCellSelected)
+  onCellSelectedRef.current = onCellSelected
 
   useEffect(() => {
     if (!modelData || !window.luckysheet || initialized.current) return
@@ -20,7 +22,7 @@ export default function ModelViewer({ modelData, onCellSelected }) {
           const c = cellBounds?.c
           if (r == null || c == null || r < 0 || c < 0) return
           const v = sheetData?.data?.[r]?.[c]
-          onCellSelected?.({ r, c, v, sheetName: window.luckysheet.getSheetName() })
+          onCellSelectedRef.current?.({ r, c, v, sheetName: window.luckysheet.getSheetName() })
         },
       },
     })
