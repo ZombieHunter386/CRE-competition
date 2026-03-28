@@ -4,11 +4,11 @@ export const LUCKYSHEET_BASE_CONFIG = {
   showsheetbar: true,
   showstatisticBar: false,
   sheetBottomConfig: false,
-  allowEdit: true,
+  allowEdit: false,
   enableAddRow: false,
   enableAddBackTop: false,
   userInfo: false,
   showToolbar: false,
-  showFormulaBar: true,
+  showFormulaBar: false,
   hook: {}, // populated by ModelViewer
 }
